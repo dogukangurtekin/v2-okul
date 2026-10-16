@@ -1,0 +1,3 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bakım</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex items-center justify-center"><div class="text-center p-8"><div class="text-6xl mb-4">🛠️</div><h1 class="text-2xl font-bold mb-2">Bakım çalışması</h1>
+<p class="text-slate-600">{{ $message ?: 'Kısa süre sonra yeniden hizmetinizdeyiz.' }}</p><a class="inline-block mt-6 text-indigo-600" href="{{ route('login') }}">Yönetici girişi</a></div></body></html>
