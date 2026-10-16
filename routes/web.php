@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/etkinlikler', [GameController::class, 'index'])->name('games.index');
     Route::get('/oyun/{slug}', [GameController::class, 'play'])->name('games.play');
+    Route::get('/runner-grant/{slug}', [GameController::class, 'grant'])->name('games.grant');
+    Route::get('/connect-the-dots-runner/levels', fn () => response()->file(public_path('runner-assets/connect-the-dots-runner/levels.json'), ['Content-Type' => 'application/json']))->name('games.dots-levels');
     Route::post('/oyun/{slug}/sonuc', [GameController::class, 'result'])->middleware(['role:student', 'throttle:60,1'])->name('games.result');
     Route::post('/oyun/{slug}/dene', [GameController::class, 'check'])->middleware(['role:admin,teacher', 'throttle:120,1'])->name('games.check');
     Route::post('/etkinlikler/ogretmene-ata', [GameController::class, 'assignTeacher'])->middleware('role:admin')->name('games.assign');

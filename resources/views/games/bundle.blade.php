@@ -1,15 +1,27 @@
 @extends('layouts.app')
 @section('title', $name)
 @section('content')
-<h1 class="text-2xl font-bold mb-3">{{ $cfg['emoji'] }} {{ $name }}</h1>
-<iframe src="{{ asset('runner-assets/'.$slug.'/index.html') }}" class="w-full bg-white rounded-xl shadow" style="height:75vh" allow="fullscreen"></iframe>
+<x-page-head :title="$cfg['emoji'].' '.$name" :back="[route('games.index'), 'Etkinlikler']" />
+@php($role = auth()->user()->hasRole('admin') ? 'admin' : (auth()->user()->hasRole('teacher') ? 'teacher' : 'student'))
+<iframe src="{{ asset('runner-assets/'.$slug.'/index.html') }}?role={{ $role }}" class="card" style="width:100%;height:78vh;border:0;background:#fff" allow="fullscreen"></iframe>
 @if($canRecord)
 <script>
-// Paket oyunlar sonucu window.parent.postMessage({type:'level-complete', level, seconds, score}) ile bildirir.
+// Paket oyunlar sonucu window.parent.postMessage ile bildirir; v1 mesaj biçimlerini v2 sonuç ucuna çevirir.
+let lastIdx = 0;
 window.addEventListener('message', e => {
-  if (e.origin !== location.origin || !e.data || e.data.type !== 'level-complete') return;
+  if (e.origin !== location.origin || !e.data || typeof e.data !== 'object') return;
+  const d = e.data;
+  if (d.type === 'GAME_UPDATE' && Number.isFinite(+d.currentLevelIndex)) lastIdx = +d.currentLevelIndex;
+  let level = 0, seconds = 0;
+  if (d.type === 'LEVEL_COMPLETED') {
+    level = +d.levelNo || (Number.isFinite(+d.levelId) && +d.levelId > 0 ? +d.levelId : 0) || lastIdx + 1;
+    seconds = d.elapsedSeconds != null ? +d.elapsedSeconds : (d.duration != null ? +d.duration / 1000 : 0);
+  } else if (d.type === 'LINE_TRACE_LEVEL_COMPLETE') {
+    level = +d.level; seconds = +d.seconds;
+  } else return;
+  if (!(level >= 1)) return;
   fetch(@json(route('games.result', $slug)), {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':@json(csrf_token())},
-    body: JSON.stringify({level: e.data.level|0, seconds: e.data.seconds|0, score: e.data.score|0})});
+    body: JSON.stringify({level: Math.round(level), seconds: Math.max(0, Math.round(seconds || 0)), score: Math.max(0, Math.round(d.xp || d.stars || 0))})});
 });
 </script>
 @endif

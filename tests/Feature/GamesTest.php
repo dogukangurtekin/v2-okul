@@ -72,6 +72,14 @@ class GamesTest extends TestCase
     public function test_unimplemented_game_shows_soon_page_for_admin(): void
     {
         [$admin] = $this->world();
-        $this->actingAs($admin)->get('/oyun/flowchart-runner')->assertOk()->assertSee('henüz v2');
+        $this->actingAs($admin)->get('/oyun/flamestone-game')->assertOk()->assertSee('henüz v2');
+    }
+
+    public function test_bundle_game_serves_iframe_and_grant_for_admin(): void
+    {
+        [$admin] = $this->world();
+        $this->actingAs($admin)->get('/oyun/flowchart-runner')->assertOk()->assertSee('runner-assets/flowchart-runner/index.html', false);
+        $this->actingAs($admin)->getJson('/runner-grant/flowchart-runner')->assertOk()->assertJson(['ok' => true, 'role' => 'staff']);
+        $this->assertFileExists(public_path('runner-assets/connect-the-dots-runner/levels.json'));
     }
 }

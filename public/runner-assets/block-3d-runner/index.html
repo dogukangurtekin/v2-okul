@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a1738">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../logo.png">
+  <title>3D Blok Kodlama</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">🤖</span>
+        <div class="brand-text"><b>3D Blok Kodlama</b><small>Bilişim Kod</small></div>
+      </div>
+
+      <div class="level-nav" role="group" aria-label="Seviye seçimi">
+        <button id="levelPrev" class="icon-btn" aria-label="Önceki seviye" title="Önceki seviye">‹</button>
+        <button id="levelPicker" class="level-picker" aria-haspopup="dialog" aria-label="Seviye listesini aç">
+          <span class="lp-name" id="levelName">Seviye 1</span>
+          <span class="lp-meta" id="levelMeta">Kolay · Çayır</span>
+        </button>
+        <button id="levelNext" class="icon-btn" aria-label="Sonraki seviye" title="Sonraki seviye">›</button>
+      </div>
+
+      <div class="top-stats">
+        <div class="progress-pill" title="Tamamlanan seviyeler">
+          <span id="progressText">0 / 200</span>
+          <div class="progress-bar"><i id="progressFill"></i></div>
+        </div>
+        <span class="chip chip-timer hidden" id="sessionTimer" title="Oturum süresi">00:00</span>
+        <span class="chip chip-xp hidden" id="sessionXp" title="Bu oturumda kazanılan XP">XP: 0</span>
+        <span class="xp-pill" id="xpBadge" title="Kazanılan toplam XP">⭐ 0 XP</span>
+        <button id="btnAssign" class="btn-top btn-assign hidden" type="button" title="Bu seviyeyi ödev olarak ver">Ödev Ver</button>
+        <button id="btnClose" class="btn-top btn-exit hidden" type="button" title="Oyundan çık">Çık</button>
+        <button id="soundToggle" class="icon-btn" aria-label="Sesi aç/kapat" title="Ses">🔊</button>
+        <button id="darkToggle" class="icon-btn" aria-label="Tema değiştir" title="Tema">🌙</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="stage-card" aria-label="3D oyun alanı">
+        <div class="stage-head">
+          <div class="stage-title">
+            <h2 id="stageTitle">Seviye 1</h2>
+            <p id="stageHint" class="stage-hint"></p>
+          </div>
+          <div class="stars" id="starRow" aria-label="Kazanılan yıldızlar">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+        </div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="gridCanvas" aria-label="3 boyutlu oyun alanı"></canvas>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="controls">
+          <button id="resetBtn" class="btn btn-ghost" title="Karakteri başa al">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 5V2L7 6.5 12 11V8a5 5 0 11-5 5H5a7 7 0 107-8z" fill="currentColor"/></svg>
+            <span>Sıfırla</span>
+          </button>
+          <button id="runBtn" class="btn btn-run" title="Programı çalıştır">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>
+            <span>Çalıştır</span>
+          </button>
+          <button id="stepBtn" class="btn btn-ghost" title="Tek adım ilerle">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 5v14l9-7zM17 5h2v14h-2z" fill="currentColor"/></svg>
+            <span>Adım</span>
+          </button>
+          <button id="speedBtn" class="btn btn-ghost btn-compact" title="Hız">
+            <span id="speedLabel">1x</span>
+          </button>
+        </div>
+
+        <div class="status-row">
+          <span id="status" class="status" role="status" aria-live="polite">Hazır</span>
+          <span id="blockCounter" class="block-counter" title="Kullandığın blok sayısı"></span>
+        </div>
+      </section>
+
+      <section class="workspace-card" aria-label="Blok editörü">
+        <div class="ws-head">
+          <h3>🧩 Programın</h3>
+          <div class="ws-tools">
+            <span class="ws-help" id="wsHelp">Blokları BAŞLA kutusunun içine bırak, alt alta yapışsın</span>
+            <button id="clearBtn" class="btn btn-ghost btn-compact" title="Blokları temizle">Temizle</button>
+          </div>
+        </div>
+        <div class="palette" id="palette" aria-label="Blok paleti"></div>
+        <div id="editor" class="ed-ws" aria-label="Program alanı"></div>
+        <div class="coach hidden" id="coach" role="note">
+          <b>Nasıl oynanır?</b>
+          <ol>
+            <li>Bir bloğu <b>sürükle</b> (ya da ona <b>dokun</b>).</li>
+            <li>Blok <b>▶ BAŞLA</b> kutusunda, <b>alt alta</b> yapışır (mıknatıs gibi).</li>
+            <li><b>Çalıştır</b>'a bas: bloklar <b>yukarıdan aşağıya</b> sırayla çalışır.</li>
+          </ol>
+          <button id="coachClose" class="btn btn-ghost btn-compact" type="button">Anladım</button>
+        </div>
+        <div class="ws-loading hidden" id="wsLoading">Blok editörü yükleniyor…</div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Seviye seçici -->
+  <div id="pickerModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card picker-card">
+      <div class="modal-head">
+        <h3 id="pickerTitle">Seviyeler</h3>
+        <button class="icon-btn" data-close aria-label="Kapat">✕</button>
+      </div>
+      <div id="pickerBody" class="picker-body"></div>
+    </div>
+  </div>
+
+  <!-- Seviye tamamlandı -->
+  <div id="resultModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card result-card">
+      <canvas id="confettiCanvas" class="confetti" aria-hidden="true"></canvas>
+      <div class="result-emoji" aria-hidden="true">🎉</div>
+      <h3 id="resultTitle">Harika! Seviye tamamlandı</h3>
+      <div class="result-stars" id="resultStars" aria-label="Kazanılan yıldızlar"><span>★</span><span>★</span><span>★</span></div>
+      <p id="resultText" class="result-text"></p>
+      <div class="result-stats">
+        <div><b id="resultXp">+0</b><small>XP</small></div>
+        <div><b id="resultBlocks">0</b><small>blok</small></div>
+        <div><b id="resultPar">0</b><small>en iyi</small></div>
+      </div>
+      <div class="result-actions">
+        <button id="resultNext" class="btn btn-run">Sonraki seviye ›</button>
+        <button id="resultRetry" class="btn btn-ghost">Tekrar dene</button>
+        <button id="resultClose" class="btn btn-ghost">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="engine.js"></script>
+  <script src="levels.js"></script>
+  <script src="render3d.js"></script>
+  <script src="editor.js"></script>
+  <script src="app.js"></script>
+  <script src="../pwa-init.js" defer></script>
+</body>
+</html>

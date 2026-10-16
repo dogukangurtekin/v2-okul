@@ -87,6 +87,21 @@ class GameController extends Controller
         return $class ? app($class) : null;
     }
 
+    /** Paket (iframe) oyunlarin yetki sorgusu: v1 /runner-grant/{slug} sozlesmesi. */
+    public function grant(Request $request, string $slug)
+    {
+        $this->assertKnown($slug);
+        $user = $request->user();
+        $max = (int) config("runners.$slug.levels", 1);
+        if ($user->hasRole('admin', 'teacher')) {
+            return response()->json(['ok' => true, 'role' => 'staff']);
+        }
+        $student = $user->student ?? abort(403);
+        abort_unless($this->access->canPlay($student, $slug), 403);
+
+        return response()->json(['ok' => true, 'role' => 'student', 'from' => 1, 'to' => $max]);
+    }
+
     public function result(Request $request, string $slug, GameProgressService $progress)
     {
         $this->assertKnown($slug);
