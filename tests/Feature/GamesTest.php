@@ -88,4 +88,14 @@ class GamesTest extends TestCase
         $this->actingAs($admin)->getJson('/runner-grant/flowchart-runner')->assertOk()->assertJson(['ok' => true, 'role' => 'staff']);
         $this->assertFileExists(public_path('runner-assets/connect-the-dots-runner/levels.json'));
     }
+
+    public function test_bundle_games_are_clickable_for_students_on_games_page(): void
+    {
+        [, $teacher, , $sUser] = $this->world();
+        foreach (array_keys(config('games')) as $slug) {
+            \Illuminate\Support\Facades\DB::table('teacher_games')->insert(['teacher_id' => $teacher->id, 'game_slug' => $slug]);
+        }
+        $html = $this->actingAs($sUser)->get('/etkinlikler')->assertOk()->getContent();
+        $this->assertStringNotContainsString('pointer-events:none', $html);
+    }
 }

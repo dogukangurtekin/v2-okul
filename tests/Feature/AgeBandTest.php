@@ -34,7 +34,7 @@ class AgeBandTest extends TestCase
     public function test_each_grade_gets_its_own_shell_and_dashboard_and_all_student_pages_render(): void
     {
         $this->seed(DatabaseSeeder::class);
-        foreach ([[2, 'kid', 's-hero'], [6, 'mid', 'm-head'], [10, 'teen', 't-read']] as [$grade, $band, $marker]) {
+        foreach ([[2, 'kid', 's-hero'], [6, 'mid', 'm-hero'], [10, 'teen', 't-read']] as [$grade, $band, $marker]) {
             $u = $this->studentInGrade($grade);
             $this->actingAs($u)->get('/dashboard')->assertOk()->assertSee("band-$band", false)->assertSee($marker, false);
             foreach (['/ogrenci/derslerim', '/ogrenci/odevlerim', '/ogrenci/avatarlarim', '/ogrenci/rozetlerim', '/ogrenci/siralama', '/ogrenci/arkadaslarim', '/ogrenci/sinif-panosu', '/ogrenci/canli', '/ogrenci/karnem', '/ogrenci/devamsizlik', '/ogrenci/notlarim', '/ogrenci/mesajlar', '/duyurular', '/bildirimlerim', '/etkinlikler'] as $url) {

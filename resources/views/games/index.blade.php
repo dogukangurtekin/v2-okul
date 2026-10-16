@@ -9,7 +9,7 @@
   @php($cfg = config("runners.$slug"))
   @php($levels = $cfg['levels'] ?? 1)
   @php($doneN = $progress[$slug] ?? 0)
-  @php($ready = in_array($cfg['kind'], ['native', 'route']))
+  @php($ready = in_array($cfg['kind'], ['native', 'route']) || file_exists(public_path("runner-assets/$slug/index.html")))
   <a href="{{ $ready ? route('games.play', $slug) : '#' }}" class="s-card" style="padding:0;overflow:hidden;{{ $ready ? '' : 'opacity:.6;pointer-events:none' }}">
     <div class="s-banner g{{ crc32($slug) % 6 }}" style="height:120px"><span style="font-size:4rem">{{ $cfg['emoji'] }}</span>
       <b class="s-chip {{ $doneN >= $levels ? 'ok' : ($doneN ? 'warn' : '') }}" style="position:absolute;top:.7rem;right:.7rem">{{ $doneN >= $levels ? '🏆 Bitti' : ($doneN ? '▶️ Devam' : ($ready ? '✨ Yeni' : '🔧 Yakında')) }}</b></div>
@@ -30,7 +30,7 @@
   @php($cfg = config("runners.$slug"))
   <a href="{{ route('games.play', $slug) }}" class="card card-pad" style="text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
     <div style="font-size:2.4rem">{{ $cfg['emoji'] }}</div><b style="display:block;margin:.4rem 0 .5rem">{{ config("games.$slug") }}</b>
-    <span class="badge {{ in_array($cfg['kind'], ['native', 'route']) ? 'badge-ok' : '' }}">{{ in_array($cfg['kind'], ['native', 'route']) ? 'Hazır' : 'Paket / yakında' }}</span>
+    @php($rdy = in_array($cfg['kind'], ['native', 'route']) || file_exists(public_path("runner-assets/$slug/index.html")))<span class="badge {{ $rdy ? 'badge-ok' : '' }}">{{ $rdy ? 'Hazır' : 'Paket / yakında' }}</span>
     <span class="badge" style="margin-left:.2rem">{{ $cfg['levels'] ?? 1 }} seviye</span>
   </a>
 @empty<div class="card empty" style="grid-column:1/-1"><div class="empty-i">🔒</div>Size henüz etkinlik açılmamış. Yöneticiden isteyin.</div>@endforelse

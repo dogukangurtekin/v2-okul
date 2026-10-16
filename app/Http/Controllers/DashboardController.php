@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\StudentActivityLog;
 use App\Models\SupportRequest;
 use App\Models\Teacher;
+use App\Models\GameProgress;
 use App\Models\XpEntry;
 use App\Services\GameAccessService;
 use App\Support\Level;
@@ -33,7 +34,7 @@ class DashboardController extends Controller
     {
         $student = $user->student?->load('schoolClass', 'avatar', 'badges');
         if (! $student) {
-            return view('dashboard.student', ['student' => null, 'lv' => Level::forXp(0), 'rank' => null, 'pending' => collect(), 'resume' => null, 'badges' => collect(), 'earned' => [], 'live' => null, 'stats' => [], 'announcements' => collect()]);
+            return view('dashboard.student', ['student' => null, 'heat' => [], 'week' => [], 'streak' => 0, 'topFive' => collect(), 'recentXp' => collect(), 'gameCards' => collect(), 'courseCards' => collect(), 'nextBadge' => null, 'lv' => Level::forXp(0), 'rank' => null, 'pending' => collect(), 'resume' => null, 'badges' => collect(), 'earned' => [], 'live' => null, 'stats' => [], 'announcements' => collect()]);
         }
 
         $rank = $student->school_class_id
@@ -57,6 +58,41 @@ class DashboardController extends Controller
         $allBadges = Badge::orderBy('xp_threshold')->get();
         $earned = $student->badges->pluck('id')->all();
 
+        // Orta/lise panelleri: etkinlik verileri (XP defterinden)
+        $since = now()->subDays(83)->startOfDay();
+        $gains = XpEntry::where('student_id', $student->id)->where('delta', '>', 0)->where('created_at', '>=', $since)->get(['delta', 'created_at']);
+        $byDay = $gains->groupBy(fn ($e) => $e->created_at->toDateString());
+        $heat = collect(range(83, 0))->map(fn ($i) => ['d' => now()->subDays($i)->toDateString(), 'n' => $byDay->get(now()->subDays($i)->toDateString(), collect())->count()])->all();
+        $week = collect(range(6, 0))->map(function ($i) use ($byDay) {
+            $d = now()->subDays($i);
+
+            return ['label' => $d->locale('tr')->isoFormat('dd'), 'xp' => (int) $byDay->get($d->toDateString(), collect())->sum('delta'), 'today' => $i === 0];
+        })->all();
+        $streak = 0;
+        foreach (array_reverse($heat) as $i => $h) {
+            if ($h['n'] > 0) {
+                $streak++;
+            } elseif ($i > 0) {
+                break; // bugün henüz etkinlik yoksa seri bozulmaz
+            }
+        }
+        $topFive = $student->school_class_id
+            ? Student::with('user', 'avatar')->where('school_class_id', $student->school_class_id)->orderByDesc('xp_total')->limit(5)->get() : collect();
+        $recentXp = XpEntry::where('student_id', $student->id)->latest()->limit(6)->get();
+        $gameProgress = GameProgress::where('student_id', $student->id)->get()->groupBy('game_slug')->map->count();
+        $gameCards = collect($games->allowedSlugs($student))->take(6)->map(fn ($slug) => [
+            'slug' => $slug, 'emoji' => config("runners.$slug.emoji"), 'name' => config("games.$slug"),
+            'done' => (int) ($gameProgress[$slug] ?? 0), 'total' => (int) config("runners.$slug.levels", 1),
+        ])->values();
+        $progressByCourse = $progress->keyBy('course_id');
+        $courseCards = Course::visibleToStudent($student)->withCount('slides')->orderBy('sort_order')->limit(4)->get()->map(function ($c) use ($progressByCourse) {
+            $p = $progressByCourse->get($c->id);
+            $total = max(1, $c->slides_count);
+
+            return ['course' => $c, 'pct' => $p?->completed_at ? 100 : ($p ? min(99, (int) round(($p->slide_index + 1) / $total * 100)) : 0), 'started' => (bool) $p];
+        });
+        $nextBadge = $allBadges->first(fn ($b) => ! in_array($b->id, $earned));
+
         return view('dashboard.student', [
             'student' => $student, 'lv' => Level::forXp($student->xp_total), 'rank' => $rank,
             'classSize' => $student->school_class_id ? Student::where('school_class_id', $student->school_class_id)->count() : 0,
@@ -66,6 +102,8 @@ class DashboardController extends Controller
                 'games' => count($games->allowedSlugs($student)),
             ],
             'announcements' => Announcement::visibleTo($user)->limit(2)->get(),
+            'heat' => $heat, 'week' => $week, 'streak' => $streak, 'topFive' => $topFive, 'recentXp' => $recentXp,
+            'gameCards' => $gameCards, 'courseCards' => $courseCards, 'nextBadge' => $nextBadge,
         ]);
     }
 
