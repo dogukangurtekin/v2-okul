@@ -44,6 +44,7 @@ CSS/Tailwind yerleşimi ve görünüm, tuvalin gerçek piksel çıktısı (yaln�
 | `bridge.php` | kalıcı PHP işçisi: JSON istek → Laravel → JSON yanıt |
 | `seed.php` | korumalı test veritabanı kurulumu (`ali@x.test`, `t@x.test`, yönetici) |
 | `games.mjs` | üç oyunun tam akışı (`student` / `staff` argümanı) |
+| `live.mjs` | Canlı quiz: yönetici + öğrenci oturumu, öğrenci oyun sayfasının (Kahoot tarzı) betiği gerçek sunucuyla |
 | `persist.mjs` | yeniden yükleme, seviye atlama reddi, tekrar XP yok, panel XP toplamı |
 | `games2.mjs` | Arı Bahçesi ve Python Editörü akışları (Python **gerçek Pyodide** ile Node içinde çalışır) |
 | `pyworker.mjs` | Python Web Worker katmanı (`pyWorkerSource`) gerçek Pyodide ile `worker_threads` içinde; zaman aşımı/yeniden başlatma mantığı |

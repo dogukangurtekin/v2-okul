@@ -58,6 +58,6 @@ class CourseController extends Controller
             $xp->award($student, self::COMPLETE_XP, 'Ders tamamlandı: '.$course->name, $course);
         }
 
-        return redirect()->route('student.courses')->with('ok', 'Ders tamamlandı!');
+        return redirect()->route('student.courses')->with('ok', 'Ders tamamlandı! +'.self::COMPLETE_XP.' XP 🎉')->with('celebrate', true);
     }
 }

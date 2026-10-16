@@ -108,7 +108,7 @@ check(`[${mode}] giriş`, (await c.login(...USERS[mode])) === 302);
   check('PY: satır sonu olmayan çıktı kaybolmaz', out === 'sonsuz değil', JSON.stringify(out));
   out = await run('print("iki")');
   check('PY: önceki çalıştırmanın artığı sızmaz', out === 'iki\n', JSON.stringify(out));
-  check('PY: serbest mod sunucuya hiçbir şey göndermedi', !c.requests.slice(reqBefore).some(r => r.startsWith('POST')), c.requests.slice(reqBefore).join(';'));
+  check('PY: serbest mod sunucuya hiçbir şey göndermedi', !c.requests.slice(reqBefore).some(r => r.startsWith('POST') && !r.includes('/sure/ping')), c.requests.slice(reqBefore).join(';'));   // 30 sn'lik etkin süre ping'i hariç
 
   p.$('tabs').children[0].click(); await sleep(30);      // görev moduna dön
   // Tüm görevler

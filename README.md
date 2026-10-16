@@ -58,3 +58,10 @@ Yeni bir doğrulamalı oyun eklemek için: `app/Games/GameVerifier` arayüzünü
 
 ## Yayına alma
 GitHub + alt alan adı adımları: `docs/DEPLOY_ALTALAN_ADI.md`. Üretim ayarları: `.env.production.example`. Güncelleme: `bash scripts/deploy.sh`.
+
+## Arayüz / tasarım sistemi (Faz 14)
+- İki kabuk: **personel** (koyu menü, sade, profesyonel) ve **öğrenci** (renkli, animasyonlu, seviye/XP çubuğu, alt menü). Giriş ekranı ve misafir sayfaları ayrı.
+- Stil: `resources/css/app.css` (Tailwind v4 + tasarım dili) → **derlenmiş çıktı `public/css/app.css` depoya dahildir**, sunucuda Node gerekmez.
+  CSS'e/şablonlara sınıf eklediğinizde yeniden derleyin: `npm install` (bir kez) → `npm run build:css`.
+- Davranış: `public/js/ui.js` (menü, bildirim, sayaç, XP çubuğu, konfeti). JS kapalıysa sayfalar yine çalışır.
+- Eski sayfalar (Tailwind yardımcı sınıflarıyla yazılmış) CSS'in sonundaki "yükseltme" kurallarıyla yeni görünüme otomatik uyar; yeni sayfalarda `.card`, `.btn`, `.badge`, `.field` (personel) ve `.s-card`, `.s-btn`, `.s-chip` (öğrenci) bileşenlerini kullanın.

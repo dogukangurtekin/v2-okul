@@ -56,6 +56,6 @@ class AssignmentController extends Controller
             $xp->award($student, $assignment->xp_reward, 'Ödev tamamlandı: '.$assignment->title, $assignment);
         }
 
-        return redirect()->route('student.assignments')->with('ok', 'Ödev tamamlandı!');
+        return redirect()->route('student.assignments')->with('ok', 'Ödev tamamlandı! 🎉')->with('celebrate', true);
     }
 }

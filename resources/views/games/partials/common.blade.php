@@ -7,7 +7,10 @@ window.GAME = {
   async submit(level, seconds, payload) {
     const r = await fetch(this.url, {method:'POST', headers:{'Content-Type':'application/json',Accept:'application/json','X-CSRF-TOKEN':this.csrf}, body: JSON.stringify({level, seconds, payload})});
     if (!r.ok) return {ok:false, messages:['Sunucu hatası ('+r.status+'). Önceki seviyeyi tamamlamış olmalısın.']};
-    const j = await r.json(); if (j.ok && this.can) this.done.add(level); return j;
+    const j = await r.json();
+    if (j.ok && this.can) { this.done.add(level); if (window.UI && j.repeat === false) UI.celebrate({xp: j.xp}); }
+    if (!j.ok) { const m = document.getElementById('msg'); if (m) { m.classList.remove('shake'); void m.offsetWidth; m.classList.add('shake'); } }
+    return j;
   },
   tabs(el, count, onPick) {
     el.innerHTML = '';

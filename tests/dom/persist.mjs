@@ -29,7 +29,7 @@ check('Yeniden yükleme: Web Atölyesi sekmeleri', tabs(p) === 'Do' + 'L'.repeat
 p.close();
 
 const dash = await c.http('GET', '/dashboard');
-const xp = dash.text.match(/Toplam XP<\/div><div class="text-3xl font-bold">(\d+)/)?.[1];
+const xp = dash.text.match(/data-count="(\d+)">\d+<\/span> XP/)?.[1];   // kahraman kartındaki toplam XP
 check('Panel toplam XP = 3×10 + 12 + 12', xp === '54', 'XP=' + xp);
 const errs = [...new Set(c.errors)]; check('JS hatası yok', errs.length === 0, errs.join(' | '));
 check('PHP hatası yok', phpStderr().trim() === '', phpStderr().slice(0, 300));

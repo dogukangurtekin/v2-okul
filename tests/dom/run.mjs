@@ -12,7 +12,7 @@ import { HERE, CACHE, PHP, testEnv } from './dom.mjs';
 
 const full = process.argv.includes('--full');
 const only = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7);   // örn. --only=games2
-const allSuites = [['games.mjs', 'student'], ['games.mjs', 'staff'], ['games2.mjs', 'student'], ['games2.mjs', 'staff'], ['pyworker.mjs'], ['persist.mjs'], ...(full ? [['fuzz.mjs']] : [])];
+const allSuites = [['games.mjs', 'student'], ['games.mjs', 'staff'], ['games2.mjs', 'student'], ['games2.mjs', 'staff'], ['pyworker.mjs'], ['live.mjs'], ['persist.mjs'], ...(full ? [['fuzz.mjs']] : [])];
 const suites = only ? allSuites.filter(([f]) => f.includes(only)) : allSuites;
 if (!suites.length) { console.error(`--only=${only} hiçbir takımla eşleşmedi`); process.exit(2); }
 fs.mkdirSync(CACHE, { recursive: true });
