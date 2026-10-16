@@ -53,11 +53,18 @@
             <div class="tb-title">@yield('title')</div>
             <div style="margin-left:auto;display:flex;gap:.6rem;align-items:center">
                 @if($isAdmin && $openSupport)<a class="tb-btn" href="{{ route('support.index') }}" title="Okunmamış destek talebi"><x-icon name="lifebuoy" /><span class="dot">{{ $openSupport }}</span></a>@endif
+                <button type="button" class="tb-btn theme-btn" id="themeBtn" aria-label="Gece / gündüz modu" title="Gece / gündüz modu"><span class="i-moon"><x-icon name="moon" /></span><span class="i-sun"><x-icon name="sun" /></span></button>
                 <a class="tb-btn" href="{{ route('notifications.inbox') }}" title="Bildirimler"><x-icon name="bell" />@if($unread)<span class="dot">{{ $unread }}</span>@endif</a>
             </div>
         </header>
         <main class="page">@yield('content')</main>
     </div>
     @include('layouts.partials.flash')
+    <script>
+    document.getElementById('themeBtn')?.addEventListener('click', function () {
+      var d = document.documentElement, n = d.dataset.theme === 'dark' ? 'light' : 'dark';
+      d.dataset.theme = n; try { localStorage.setItem('theme_staff', n); } catch (e) {}
+    });
+    </script>
     <script src="{{ asset('js/ui.js') }}?v={{ $cssV }}" defer></script>
 </body>

@@ -71,6 +71,12 @@ class AdminPagesSmokeTest extends TestCase
         }
     }
 
+    public function test_staff_shell_has_theme_toggle(): void
+    {
+        $w = $this->seedWorld();
+        $this->actingAs($w['admin'])->get('/dashboard')->assertOk()->assertSee('id="themeBtn"', false)->assertSee('theme_staff', false);
+    }
+
     public function test_every_student_page_renders_for_student(): void
     {
         $w = $this->seedWorld();

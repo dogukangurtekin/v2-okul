@@ -17,3 +17,6 @@
 @if(auth()->check() && auth()->user()->hasRole('student'))
 <script>(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem('theme')}catch(e){}d.dataset.theme=(t==='dark'||t==='light')?t:@json(\App\Support\AgeBand::current() === 'teen' ? 'dark' : 'light');})();</script>
 @endif
+@if(auth()->check() && ! auth()->user()->hasRole('student'))
+<script>(function(){var t=null;try{t=localStorage.getItem('theme_staff')}catch(e){}document.documentElement.dataset.theme=(t==='dark')?'dark':'light';})();</script>
+@endif
