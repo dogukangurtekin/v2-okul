@@ -27,7 +27,7 @@ check(`[${mode}] giriş`, (await c.login(...USERS[mode])) === 302);
 
 // ---------------- Arı Bahçesi ----------------
 {
-  const p = await c.open('/oyun/bee-garden-runner');
+  const p = await c.open('/oyun/bee-garden-runner?v2=1');
   check('BG: sayfa açıldı, 8 sekme', p.$('tabs').children.length === 8, tabsState(p));
   check('BG: iframe sandbox="" (betik yok)', p.$('prev').getAttribute('sandbox') === '');
   mode === 'student' ? check('BG: yalnızca ilk seviye açık', tabsState(p) === 'o' + 'L'.repeat(7), tabsState(p)) : check('BG (personel): tüm sekmeler açık', !tabsState(p).includes('L'), tabsState(p));
@@ -68,7 +68,7 @@ check(`[${mode}] giriş`, (await c.login(...USERS[mode])) === 302);
 // ---------------- Python Editörü (gerçek Pyodide, Node içinde) ----------------
 {
   const runner = makeRunner();
-  const p = await c.open('/oyun/python-editor', { beforeParse: w => { w.PyRunner = runner; } });
+  const p = await c.open('/oyun/python-editor?v2=1', { beforeParse: w => { w.PyRunner = runner; } });
   const run = async (code, stdin = '') => { input(p.$('code'), code, p.w); input(p.$('stdin'), stdin, p.w); p.$('out').textContent = '\u0000'; p.$('run').click(); await waitFor(() => p.$('out').textContent !== '\u0000' && !p.$('run').disabled, 90000, 'Python çalıştırma'); return p.$('out').textContent; };
   const submit = async () => { p.$('msg').innerHTML = ''; p.$('submit').click(); await waitFor(() => p.$('msg').children.length, 6000, 'gönder sonucu'); return msgText(p); };
 

@@ -22,7 +22,7 @@ check(`[${mode}] giriş`, status === 302, 'status ' + status);
 
 // ---------------- Silent Teacher ----------------
 {
-  const p = await c.open('/oyun/silent-teacher-runner');
+  const p = await c.open('/oyun/silent-teacher-runner?v2=1');
   check('ST: sayfa açıldı, 12 sekme', p.$('tabs').children.length === 12, tabsState(p));
   check('ST: kod satır numaralı gösteriliyor', p.$('code').textContent.includes('print("Merhaba")') && /\s1\s+print/.test(p.$('code').textContent));
   if (mode === 'student') check('ST: ilk seviye açık, diğerleri kilitli', tabsState(p) === 'o' + 'L'.repeat(11), tabsState(p));
@@ -47,7 +47,7 @@ check(`[${mode}] giriş`, status === 302, 'status ' + status);
 
 // ---------------- Lightbot ----------------
 {
-  const p = await c.open('/oyun/lightbot-runner');
+  const p = await c.open('/oyun/lightbot-runner?v2=1');
   check('LB: sayfa açıldı, 6 sekme', p.$('tabs').children.length === 6, tabsState(p));
   check('LB: tuval çizildi', p.w.__draws.length > 5, 'çizim çağrısı ' + p.w.__draws.length);
   const add = seq => { for (const ch of seq) { const b = p.$('pal').querySelector(`[data-c="${ch}"]`); if (!b) throw new Error('palette yok: ' + ch); b.click(); } };
@@ -80,7 +80,7 @@ check(`[${mode}] giriş`, status === 302, 'status ' + status);
 
 // ---------------- Web Atölyesi ----------------
 {
-  const p = await c.open('/oyun/web-lab-runner');
+  const p = await c.open('/oyun/web-lab-runner?v2=1');
   check('WL: sayfa açıldı, 8 sekme', p.$('tabs').children.length === 8, tabsState(p));
   check('WL: iframe sandbox="" (betik yok)', p.$('prev').getAttribute('sandbox') === '', String(p.$('prev').getAttribute('sandbox')));
   check('WL: başlangıç HTML yorum satırı', p.$('html').value.includes('kodunu buraya'), p.$('html').value);

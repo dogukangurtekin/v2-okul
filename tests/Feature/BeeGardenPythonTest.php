@@ -241,14 +241,14 @@ class BeeGardenPythonTest extends TestCase
 
         // Sayfalarda cevap anahtarı yok
         $j = fn (string $t) => trim(json_encode($t), '"');
-        $bee = $this->get('/oyun/bee-garden-runner')->assertOk();
+        $bee = $this->get('/oyun/bee-garden-runner?v2=1')->assertOk();
         $bee->assertSee($j('Sağa yasla'), false);
         $bee->assertDontSee('"solution"', false);
         foreach (config('game_levels.bee-garden-runner') as $l) {
             $bee->assertDontSee($j($l['explain']), false);
             $bee->assertDontSee($j($l['hint']), false);
         }
-        $pyPage = $this->get('/oyun/python-editor')->assertOk();
+        $pyPage = $this->get('/oyun/python-editor?v2=1')->assertOk();
         $pyPage->assertSee('Serbest', false);
         $pyPage->assertSee('pyodide', false);
         $pyPage->assertDontSee('"expect"', false);

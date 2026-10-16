@@ -66,6 +66,11 @@ class GameController extends Controller
         if ($cfg['kind'] === 'route') {
             return redirect('/'); // Faz 5: canli quiz
         }
+        // v1'in orijinal arayuzu (varsayilan); ?v2=1 ile yeniden yazilmis dogrulamali surum.
+        $classic = ($cfg['classic'] ?? false) && ! request()->boolean('v2') && File::exists(public_path("runner-assets/$slug/index.html"));
+        if ($classic) {
+            return view('games.bundle', $data + ['classic' => true]);
+        }
         if ($cfg['kind'] === 'native' && view()->exists("games.native.$slug")) {
             $levels = config("game_levels.$slug");
             $verifier = $this->verifier($slug);
@@ -112,11 +117,14 @@ class GameController extends Controller
             'level' => ['required', 'integer', 'min:1'],
             'seconds' => ['required', 'integer', 'min:0', 'max:36000'],
             'score' => ['nullable', 'integer', 'min:0', 'max:100000'],
+            'classic' => ['nullable', 'boolean'],
         ]);
 
         $score = $data['score'] ?? 0;
         $explain = null;
-        if ($verifier = $this->verifier($slug)) {
+        // Orijinal (klasik) arayuz cozum yuku gondermez; v1'deki gibi istemci bildirimi kabul edilir (seviye basina bir kez XP).
+        $trusted = config("runners.$slug.classic") && $request->boolean('classic');
+        if (! $trusted && $verifier = $this->verifier($slug)) {
             // Dogrulamali oyun: XP yalniz sunucu cozumu onaylarsa. Basarisizlik 200 + ok:false (oyun akisi hata degil).
             $v = $verifier->verify($data['level'], (array) $request->input('payload', []));
             if (! $v['ok']) {

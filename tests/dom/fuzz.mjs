@@ -9,7 +9,7 @@ const SOL = [['FFFX', ''], ['FFFRFFX', ''], ['RFFFLFFFLFX', ''], ['PP', 'FFX'], 
 await startWorker();
 const c = new Client();
 await c.login(...USERS.staff);
-const p = await c.open('/oyun/lightbot-runner');
+const p = await c.open('/oyun/lightbot-runner?v2=1');
 const w = p.w; const orig = w.fetch; w.fetch = (...a) => { w.__submitted = true; return orig(...a); };
 const add = (seq) => { for (const ch of seq) { const b = p.$('pal').querySelector(`[data-c="${ch}"]`); if (b) b.click(); } };
 

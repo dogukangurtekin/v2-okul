@@ -11,7 +11,7 @@ import { makeRunner } from './pyrunner.mjs';
 await startWorker();
 const c = new Client();
 await c.login(...USERS.student);
-const p = await c.open('/oyun/python-editor', { beforeParse: w => { w.PyRunner = makeRunner(); } });
+const p = await c.open('/oyun/python-editor?v2=1', { beforeParse: w => { w.PyRunner = makeRunner(); } });
 const src = p.w.pyWorkerSource('https://cdn.example/pyodide/');
 check('Worker kaynağı üretildi ve indexURL gömüldü', typeof src === 'string' && src.includes('"https://cdn.example/pyodide/pyodide.js"') && src.includes('self.onmessage'), String(src).slice(0, 80));
 

@@ -200,7 +200,7 @@ class VerifiedGamesTest extends TestCase
 
         $j = fn (string $text) => trim(json_encode($text), '"');   // @json unicode'u \uXXXX yazar; sizinti kontrolu ayni bicimle yapilmali
 
-        $st = $this->get('/oyun/silent-teacher-runner')->assertOk();
+        $st = $this->get('/oyun/silent-teacher-runner?v2=1')->assertOk();
         $st->assertSee('print(', false);                     // kod gorunur
         $st->assertSee($j('Metin birleştirme'), false);      // seviye basligi gorunur
         foreach (config('game_levels.silent-teacher-runner') as $l) {
@@ -210,7 +210,7 @@ class VerifiedGamesTest extends TestCase
         $st->assertDontSee('"explain"', false);
         $st->assertDontSee($j('Merhaba Ada'), false);        // beklenen cikti (kodda yalniz "Merhaba " + ad var)
 
-        $wl = $this->get('/oyun/web-lab-runner')->assertOk();
+        $wl = $this->get('/oyun/web-lab-runner?v2=1')->assertOk();
         $wl->assertSee($j('Sınıf (class)'), false);
         foreach (config('game_levels.web-lab-runner') as $l) {
             foreach ($l['checks'] as $c) {
@@ -219,17 +219,17 @@ class VerifiedGamesTest extends TestCase
         }
         $wl->assertDontSee('"checks"', false);
 
-        $this->get('/oyun/lightbot-runner')->assertOk()->assertSee('Kare turu', false);
+        $this->get('/oyun/lightbot-runner?v2=1')->assertOk()->assertSee('Kare turu', false);
     }
 
     public function test_game_access_still_enforced_and_staff_preview_does_not_record(): void
     {
         [$admin, $sUser] = $this->world(['web-lab-runner']);
-        $this->actingAs($sUser)->get('/oyun/lightbot-runner')->assertForbidden();                                // acilmamis
+        $this->actingAs($sUser)->get('/oyun/lightbot-runner?v2=1')->assertForbidden();                                // acilmamis
         $this->postJson('/oyun/lightbot-runner/sonuc', ['level' => 1, 'seconds' => 1, 'payload' => self::LIGHTBOT_SOLUTIONS[1]])->assertForbidden();
         $this->postJson('/oyun/lightbot-runner/dene', ['level' => 1, 'payload' => self::LIGHTBOT_SOLUTIONS[1]])->assertForbidden();   // ogrenci personel ucunu kullanamaz
 
-        $this->actingAs($admin)->get('/oyun/lightbot-runner')->assertOk();
+        $this->actingAs($admin)->get('/oyun/lightbot-runner?v2=1')->assertOk();
         $this->postJson('/oyun/lightbot-runner/dene', ['level' => 1, 'payload' => self::LIGHTBOT_SOLUTIONS[1]])->assertOk()->assertJson(['ok' => true, 'preview' => true, 'xp' => 0]);
         $this->postJson('/oyun/lightbot-runner/dene', ['level' => 1, 'payload' => ['main' => ['F'], 'proc' => []]])->assertOk()->assertJson(['ok' => false]);
         $this->assertSame(0, GameProgress::count());

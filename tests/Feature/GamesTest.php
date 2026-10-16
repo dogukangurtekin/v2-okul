@@ -32,10 +32,10 @@ class GamesTest extends TestCase
     public function test_locked_game_is_forbidden_until_admin_opens_it_for_teacher(): void
     {
         [$admin, $teacher, , $sUser] = $this->world();
-        $this->actingAs($sUser)->get('/oyun/block-grid-runner')->assertForbidden();
+        $this->actingAs($sUser)->get('/oyun/block-grid-runner?v2=1')->assertForbidden();
 
         $this->actingAs($admin)->post('/etkinlikler/ogretmene-ata', ['teacher_id' => $teacher->id, 'games' => ['block-grid-runner', 'keyboard-race']])->assertSessionHasNoErrors();
-        $this->actingAs($sUser)->get('/oyun/block-grid-runner')->assertOk()->assertSee('Çalıştır');
+        $this->actingAs($sUser)->get('/oyun/block-grid-runner?v2=1')->assertOk()->assertSee('Çalıştır');
         $this->get('/oyun/keyboard-race')->assertOk();
         $this->get('/oyun/flowchart-runner')->assertForbidden();
         $this->get('/etkinlikler')->assertOk()->assertSee('Blok Kodlama');
