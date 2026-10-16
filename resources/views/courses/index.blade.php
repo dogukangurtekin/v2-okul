@@ -1,26 +1,36 @@
 @extends('layouts.app')
 @section('title', 'Dersler')
 @section('content')
-<div class="flex justify-between mb-4"><h1 class="text-2xl font-bold">Dersler</h1>
-<div class="flex gap-2">
-<form method="POST" action="{{ route('courses.import') }}" enctype="multipart/form-data" class="flex gap-2">@csrf
-<input type="file" name="files[]" accept=".coursepkg,.json" multiple class="text-sm" required title="v2 JSON paketi veya v1 .coursepkg"><button class="bg-slate-700 text-white px-3 rounded">İçe aktar</button></form>
-<a href="{{ route('courses.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">Yeni ders</a></div></div>
+<x-page-head title="Dersler" sub="Slayt tabanlı dersler — oluşturun, sınıflara atayın, v1 paketlerini içe aktarın">
+  <label class="btn btn-ghost" style="cursor:pointer" for="imp-file"><x-icon name="upload" style="width:16px;height:16px" />İçe aktar</label>
+  <a href="{{ route('courses.create') }}" class="btn btn-primary"><x-icon name="plus" style="width:16px;height:16px" />Yeni ders</a>
+</x-page-head>
+<form id="imp" method="POST" action="{{ route('courses.import') }}" enctype="multipart/form-data" hidden>@csrf
+  <input id="imp-file" type="file" name="files[]" accept=".coursepkg,.json" multiple onchange="this.form.submit()" title="v2 JSON paketi veya v1 .coursepkg"></form>
 @if($r = session('import_report'))
-<div class="mb-4 max-w-3xl bg-white rounded-xl shadow p-4 text-sm space-y-2">
-  <div class="font-semibold">İçe aktarma raporu</div>
-  @foreach($r['courses'] as $c)<div>✅ <a class="text-indigo-600" href="{{ route('courses.edit', $c['id']) }}">{{ $c['sub'] ? '↳ ' : '' }}{{ $c['name'] }}</a> — {{ $c['slides'] }} slayt{{ $c['quizzes'] ? ', '.$c['quizzes'].' soru' : '' }}@if($c['v1_slides'] !== null) <span class="text-slate-400">(v1'de {{ $c['v1_slides'] }} slayt)</span>@endif</div>@endforeach
-  @foreach($r['errors'] as $e)<div class="text-red-700">❌ {{ $e }}</div>@endforeach
-  @if($r['warnings'])<details class="bg-amber-50 border border-amber-200 rounded p-2"><summary class="cursor-pointer font-medium">⚠️ {{ count($r['warnings']) }} uyarı</summary>@foreach($r['warnings'] as $w)<div class="mt-1">{{ $w }}</div>@endforeach</details>@endif
+<div class="card card-pad" style="margin-bottom:1.1rem;max-width:860px;font-size:.9rem;display:grid;gap:.5rem">
+  <b>İçe aktarma raporu</b>
+  @foreach($r['courses'] as $c)<div>✅ <a class="text-indigo-600" href="{{ route('courses.edit', $c['id']) }}">{{ $c['sub'] ? '↳ ' : '' }}{{ $c['name'] }}</a> — {{ $c['slides'] }} slayt{{ $c['quizzes'] ? ', '.$c['quizzes'].' soru' : '' }}@if($c['v1_slides'] !== null) <span style="color:var(--muted)">(v1'de {{ $c['v1_slides'] }} slayt)</span>@endif</div>@endforeach
+  @foreach($r['errors'] as $e)<div class="alert alert-bad">❌ {{ $e }}</div>@endforeach
+  @if($r['warnings'])<details class="alert alert-warn"><summary style="cursor:pointer;font-weight:700">⚠️ {{ count($r['warnings']) }} uyarı</summary>@foreach($r['warnings'] as $w)<div style="margin-top:.35rem">{{ $w }}</div>@endforeach</details>@endif
 </div>
 @endif
-<table class="w-full bg-white rounded-xl shadow text-sm">
-<tr class="text-left border-b"><th class="p-3">Kod</th><th>Ad</th><th>Slayt</th><th>Sınıf</th><th>Durum</th><th></th></tr>
-@foreach($courses as $c)
-<tr class="border-b"><td class="p-3">{{ $c->code }}</td><td>{{ $c->name }}</td><td>{{ $c->slides_count }}</td><td>{{ $c->classes_count }}</td><td>{{ $c->is_active ? 'Aktif' : 'Pasif' }}</td>
-<td class="text-right p-3 space-x-2"><a class="text-slate-600" href="{{ route('courses.preview', $c) }}">Önizle</a><a class="text-slate-600" href="{{ route('courses.export', $c) }}">İndir</a><a class="text-indigo-600" href="{{ route('courses.edit', $c) }}">Düzenle</a>
-<form class="inline" method="POST" action="{{ route('courses.destroy', $c) }}" onsubmit="return confirm('Silinsin mi?')">@csrf @method('DELETE')<button class="text-red-600">Sil</button></form></td></tr>
-@endforeach
-</table>
-<div class="mt-4">{{ $courses->links() }}</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem" class="rise">
+@forelse($courses as $c)
+  <div class="card" style="overflow:hidden;display:flex;flex-direction:column">
+    <div class="s-banner g{{ $c->id % 6 }}" style="height:84px;font-size:2.6rem">@if($c->cover_path)<img src="{{ asset('storage/'.$c->cover_path) }}" alt="" loading="lazy">@else<span>{{ ['🧠', '💻', '🎨', '🔬', '🚀', '🌈', '🧩', '🤖'][$c->id % 8] }}</span>@endif
+      <span class="badge {{ $c->is_active ? 'badge-ok' : 'badge-bad' }}" style="position:absolute;top:.6rem;right:.6rem">{{ $c->is_active ? 'Aktif' : 'Pasif' }}</span></div>
+    <div style="padding:1rem 1.15rem;flex:1;display:flex;flex-direction:column;gap:.55rem">
+      <div><b style="font-size:1.02rem;line-height:1.3">{{ $c->name }}</b><div style="color:var(--muted);font-size:.76rem;margin-top:.15rem">{{ $c->code }}</div></div>
+      <div style="display:flex;gap:.35rem;flex-wrap:wrap"><span class="badge">{{ $c->slides_count }} slayt</span><span class="badge badge-brand">{{ $c->classes_count }} sınıf</span>@if($c->category)<span class="badge">{{ $c->category }}</span>@endif @if($c->difficulty)<span class="badge badge-warn">{{ $c->difficulty }}</span>@endif</div>
+      <div class="ra" style="margin-top:auto;display:flex;gap:.3rem;justify-content:flex-end;padding-top:.4rem">
+        <a class="ibtn" href="{{ route('courses.preview', $c) }}">Önizle</a><a class="ibtn" href="{{ route('courses.export', $c) }}">İndir</a><a class="ibtn" href="{{ route('courses.edit', $c) }}">Düzenle</a><x-del :action="route('courses.destroy', $c)" icon />
+      </div>
+    </div>
+  </div>
+@empty
+  <div class="card" style="grid-column:1/-1"><x-empty icon="📚" title="Henüz ders yok" text="Yeni ders oluşturun ya da v1'den .coursepkg dosyası içe aktarın."><a href="{{ route('courses.create') }}" class="btn btn-primary">Ders oluştur</a></x-empty></div>
+@endforelse
+</div>
+{{ $courses->links() }}
 @endsection

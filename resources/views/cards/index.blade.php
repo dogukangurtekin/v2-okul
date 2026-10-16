@@ -1,9 +1,14 @@
 @extends('layouts.app')
 @section('title', 'Giriş Kartları')
 @section('content')
-<h1 class="text-2xl font-bold mb-1">Giriş Kartları</h1>
-<p class="text-slate-500 mb-4 max-w-2xl">Sınıf için QR'li kartlar basılır. Her kart tek kullanımlıktır ve {{ \App\Services\LoginTokenService::CARD_DAYS }} gün geçerlidir; yeni kart basınca eskisi iptal olur. Şifre kartta yer almaz.</p>
-<div class="grid grid-cols-3 gap-3 max-w-3xl">@foreach($classes as $c)
-<form method="POST" action="{{ route('cards.issue', $c) }}" onsubmit="return confirm('{{ $c->label }} için yeni kartlar basılsın mı? Eski kartlar iptal olur.')" class="bg-white rounded-xl shadow p-4">@csrf
-<div class="font-semibold">{{ $c->label }}</div><div class="text-xs text-slate-400 mb-2">{{ $c->students_count }} öğrenci</div><button class="bg-indigo-600 text-white px-3 py-1 rounded">Kartları oluştur</button></form>@endforeach</div>
+<x-page-head title="Giriş Kartları" sub="Sınıf için QR'li, tek kullanımlık giriş kartları basın." />
+<div class="alert alert-info" style="max-width:760px;margin-bottom:1.1rem">Her kart <b>tek kullanımlıktır</b> ve {{ \App\Services\LoginTokenService::CARD_DAYS }} gün geçerlidir. Yeni kart basınca eskisi iptal olur. Şifre kartta yer almaz.</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;max-width:980px" class="rise">
+@forelse($classes as $c)
+  <form method="POST" action="{{ route('cards.issue', $c) }}" onsubmit="return confirm(@js($c->label.' için yeni kartlar basılsın mı? Eski kartlar iptal olur.'))" class="card card-pad">@csrf
+    <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem"><span class="avatar-i" style="border-radius:12px;width:42px;height:42px;background:linear-gradient(135deg,#6366f1,#8b5cf6)">{{ $c->name }}</span><div><b>{{ $c->label }}</b><div style="color:var(--muted);font-size:.78rem">{{ $c->students_count }} öğrenci</div></div></div>
+    <button class="btn btn-primary btn-sm" style="width:100%"><x-icon name="idcard" style="width:15px;height:15px" />Kartları oluştur</button>
+  </form>
+@empty<div class="card empty" style="grid-column:1/-1"><div class="empty-i">🪪</div>Henüz sınıf yok.</div>@endforelse
+</div>
 @endsection

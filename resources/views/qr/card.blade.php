@@ -1,7 +1,7 @@
 @extends('layouts.plain')
 @section('title', 'Giriş')
 @section('content')
-<form method="POST" action="{{ route('card.use', $token) }}" class="max-w-sm mx-auto bg-white p-8 rounded-xl shadow text-center space-y-4">@csrf
-<div class="text-5xl">🎓</div><h1 class="text-xl font-bold">Merhaba {{ $name }}</h1><p class="text-slate-500">Bu kartla giriş yapmak istiyor musun?</p>
-<button class="w-full bg-indigo-600 text-white rounded py-2">Giriş yap</button></form>
+<form method="POST" action="{{ route('card.use', $token) }}" class="card form-card" style="margin:3rem auto;max-width:380px;text-align:center">@csrf
+<div style="font-size:3.6rem">🎓</div><h1 style="margin:.3rem 0;font-size:1.35rem;font-weight:800">Merhaba {{ $name }}</h1><p class="help" style="margin:0 0 1.1rem">Bu kartla giriş yapmak istiyor musun?</p>
+<button class="btn btn-primary" style="width:100%;justify-content:center">Giriş yap</button></form>
 @endsection

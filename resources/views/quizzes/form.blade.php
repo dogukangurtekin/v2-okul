@@ -1,25 +1,24 @@
 @extends('layouts.app')
 @section('title', 'Quiz')
 @section('content')
-<h1 class="text-2xl font-bold mb-4">{{ $quiz->exists ? 'Quizi düzenle' : 'Yeni quiz' }}</h1>
-<form method="POST" action="{{ $quiz->exists ? route('quizzes.update', $quiz) : route('quizzes.store') }}" class="max-w-2xl space-y-3">
+<x-page-head :title="$quiz->exists ? 'Quizi düzenle' : 'Yeni quiz'" :back="[route('quizzes.index'), 'Quizler']" />
+<form method="POST" action="{{ $quiz->exists ? route('quizzes.update', $quiz) : route('quizzes.store') }}" style="max-width:760px;display:grid;gap:1rem">
 @csrf @if($quiz->exists) @method('PUT') @endif
-<input name="title" value="{{ old('title', $quiz->title) }}" placeholder="Quiz başlığı" class="w-full border rounded px-3 py-2 bg-white" required>
-<div id="qs" class="space-y-3"></div>
-<button type="button" id="add" class="border rounded px-3 py-1 bg-white">+ Soru ekle</button>
-<div><button class="bg-indigo-600 text-white px-4 py-2 rounded">Kaydet</button></div>
+<div class="card form-card" style="max-width:none"><x-fg label="Quiz başlığı" for="qt"><input id="qt" name="title" value="{{ old('title', $quiz->title) }}" placeholder="Örn. Döngüler tekrar" class="field" required></x-fg></div>
+<div id="qs" style="display:grid;gap:1rem"></div>
+<div class="form-actions" style="margin:0"><button type="button" id="add" class="btn btn-soft">＋ Soru ekle</button><button class="btn btn-primary">Kaydet</button></div>
 </form>
 <template id="tpl">
-<div class="bg-white p-4 rounded-xl shadow space-y-2">
-  <textarea name="questions[__I__][text]" rows="2" placeholder="Soru metni" class="w-full border rounded px-3 py-1" required></textarea>
-  <textarea name="questions[__I__][options]" rows="4" placeholder="Seçenekler (her satıra bir tane)" class="w-full border rounded px-3 py-1" required></textarea>
-  <div class="grid grid-cols-4 gap-2 text-sm">
-    <label>Doğru (0'dan)<input type="number" min="0" name="questions[__I__][correct]" value="0" class="w-full border rounded px-2 py-1"></label>
-    <label>Süre (sn)<input type="number" name="questions[__I__][duration]" value="20" class="w-full border rounded px-2 py-1"></label>
-    <label>XP<input type="number" name="questions[__I__][xp]" value="10" class="w-full border rounded px-2 py-1"></label>
-    <label class="flex items-end gap-1"><input type="checkbox" name="questions[__I__][double]" value="1"> 2x XP</label>
+<div class="card card-pad" style="display:grid;gap:.8rem">
+  <textarea name="questions[__I__][text]" rows="2" placeholder="Soru metni" class="field" required></textarea>
+  <textarea name="questions[__I__][options]" rows="4" placeholder="Seçenekler (her satıra bir tane)" class="field" required></textarea>
+  <div class="fgrid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">
+    <label class="fg"><span class="lbl">Doğru (0'dan)</span><input type="number" min="0" name="questions[__I__][correct]" value="0" class="field"></label>
+    <label class="fg"><span class="lbl">Süre (sn)</span><input type="number" name="questions[__I__][duration]" value="20" class="field"></label>
+    <label class="fg"><span class="lbl">XP</span><input type="number" name="questions[__I__][xp]" value="10" class="field"></label>
+    <label class="chk" style="align-self:end;padding-bottom:.6rem"><input type="checkbox" name="questions[__I__][double]" value="1"> 2x XP</label>
   </div>
-  <button type="button" class="rm text-red-600 text-sm">Soruyu kaldır</button>
+  <div><button type="button" class="rm btn btn-danger btn-sm">Soruyu kaldır</button></div>
 </div>
 </template>
 <script>

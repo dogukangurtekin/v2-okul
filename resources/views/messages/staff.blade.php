@@ -1,16 +1,16 @@
 @extends('layouts.app')
 @section('title', 'Öğrenci Mesajları')
 @section('content')
-<div class="flex justify-between mb-4"><h1 class="text-2xl font-bold">Öğrenci Mesajları</h1>
-@if(auth()->user()->hasRole('admin'))<form method="POST" action="{{ route('messages.clear') }}" onsubmit="return confirm('Yanıtlananlar gizlensin mi?')">@csrf @method('DELETE')<button class="border rounded px-3 py-1 bg-white">Yanıtlananları temizle</button></form>@endif</div>
-<div class="space-y-3 max-w-2xl">
+<x-page-head title="Öğrenci Mesajları" sub="Öğrencilerden gelen sorular">
+@if(auth()->user()->hasRole('admin'))<form method="POST" action="{{ route('messages.clear') }}" onsubmit="return confirm('Yanıtlananlar gizlensin mi?')">@csrf @method('DELETE')<button class="btn btn-ghost">Yanıtlananları temizle</button></form>@endif</x-page-head>
+<div style="display:grid;gap:.8rem;max-width:760px">
 @forelse($messages as $m)
-<div class="bg-white rounded-xl shadow p-4 {{ $m->replied_at ? 'opacity-70' : 'border-l-4 border-indigo-500' }}">
-<div class="text-sm text-slate-500">{{ $m->student->user->name }} · {{ $m->student->schoolClass?->label }} · {{ $m->created_at->format('d.m H:i') }}</div>
-<div class="whitespace-pre-line my-1">{{ $m->body }}</div>
-@if($m->reply_body)<div class="p-2 bg-indigo-50 rounded text-sm whitespace-pre-line">{{ $m->reply_body }}</div>
-@else<form method="POST" action="{{ route('messages.reply', $m) }}" class="flex gap-2 mt-2">@csrf<input name="reply" maxlength="500" placeholder="Yanıt" class="flex-1 border rounded px-3 py-1" required><button class="bg-indigo-600 text-white px-3 rounded">Yanıtla</button></form>@endif
-<form method="POST" action="{{ route('messages.destroy', $m) }}" class="mt-1">@csrf @method('DELETE')<button class="text-xs text-red-600">Gizle</button></form></div>
-@empty<p class="text-slate-500">Mesaj yok.</p>@endforelse</div>
-<div class="mt-4">{{ $messages->links() }}</div>
+<div class="card card-pad" style="{{ $m->replied_at ? 'opacity:.75' : 'border-left:4px solid var(--brand)' }}">
+<div class="who" style="margin-bottom:.5rem"><x-initials :name="$m->student->user->name" :size="32" /><div><b>{{ $m->student->user->name }}</b><small>{{ $m->student->schoolClass?->label }} · {{ $m->created_at->format('d.m H:i') }}</small></div></div>
+<div style="white-space:pre-line;line-height:1.6">{{ $m->body }}</div>
+@if($m->reply_body)<div style="margin-top:.6rem;padding:.6rem .8rem;background:#eef2ff;border-radius:10px;font-size:.9rem;white-space:pre-line">{{ $m->reply_body }}</div>
+@else<form method="POST" action="{{ route('messages.reply', $m) }}" style="display:flex;gap:.5rem;margin-top:.7rem">@csrf<input name="reply" maxlength="500" placeholder="Yanıt" class="field" required><button class="btn btn-primary">Yanıtla</button></form>@endif
+<form method="POST" action="{{ route('messages.destroy', $m) }}" style="margin-top:.5rem">@csrf @method('DELETE')<button class="ibtn" style="font-size:.75rem">Gizle</button></form></div>
+@empty<x-empty icon="💬" title="Mesaj yok" />@endforelse</div>
+<div style="margin-top:1rem">{{ $messages->links() }}</div>
 @endsection

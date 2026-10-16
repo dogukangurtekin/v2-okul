@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Duyuru Yönetimi')
 @section('content')
-<div class="flex justify-between mb-4"><h1 class="text-2xl font-bold">Duyuru Yönetimi</h1><a href="{{ route('announcements.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">Yeni duyuru</a></div>
-<table class="w-full bg-white rounded-xl shadow text-sm"><tr class="text-left border-b"><th class="p-3">Başlık</th><th>Kitle</th><th>Yayın</th><th></th></tr>
-@foreach($items as $a)<tr class="border-b"><td class="p-3">{{ $a->title }}</td><td>{{ \App\Models\Announcement::AUDIENCES[$a->audience] }}</td><td>{{ $a->published_at?->format('d.m.Y H:i') }}</td>
-<td class="text-right p-3 space-x-2"><a class="text-indigo-600" href="{{ route('announcements.edit', $a) }}">Düzenle</a>
-<form class="inline" method="POST" action="{{ route('announcements.destroy', $a) }}" onsubmit="return confirm('Silinsin mi?')">@csrf @method('DELETE')<button class="text-red-600">Sil</button></form></td></tr>@endforeach</table>
-<div class="mt-4">{{ $items->links() }}</div>
+<x-page-head title="Duyuru Yönetimi" sub="Öğrenci, öğretmen ya da herkese duyuru yayınlayın"><a href="{{ route('announcements.create') }}" class="btn btn-primary"><x-icon name="plus" style="width:16px;height:16px" />Yeni duyuru</a></x-page-head>
+<div class="card tbl-wrap"><table class="tbl"><thead><tr><th>Başlık</th><th>Kitle</th><th>Yayın</th><th></th></tr></thead><tbody>
+@forelse($items as $a)<tr><td><b>{{ $a->title }}</b></td><td><span class="badge badge-brand">{{ \App\Models\Announcement::AUDIENCES[$a->audience] }}</span></td><td style="color:#94a3b8">{{ $a->published_at?->format('d.m.Y H:i') }}</td>
+<td><div class="ra"><a class="ibtn" href="{{ route('announcements.edit', $a) }}">Düzenle</a><x-del :action="route('announcements.destroy', $a)" icon /></div></td></tr>
+@empty<tr><td colspan="4"><x-empty icon="📢" title="Henüz duyuru yok" /></td></tr>@endforelse</tbody></table></div>
+{{ $items->links() }}
 @endsection

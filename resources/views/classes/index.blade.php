@@ -1,14 +1,26 @@
 @extends('layouts.app')
 @section('title', 'Sınıflar')
 @section('content')
-<div class="flex justify-between mb-4"><h1 class="text-2xl font-bold">Sınıflar</h1><a href="{{ route('classes.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">Yeni sınıf</a></div>
-<table class="w-full bg-white rounded-xl shadow text-sm">
-<tr class="text-left border-b"><th class="p-3">Sınıf</th><th>Kademe</th><th>Yıl</th><th>Öğretmen</th><th>Öğrenci</th><th></th></tr>
-@foreach($classes as $c)
-<tr class="border-b"><td class="p-3">{{ $c->label }}</td><td>{{ $c->grade_level }}</td><td>{{ $c->academic_year }}</td><td>{{ $c->teacher?->user?->name ?? '—' }}</td><td>{{ $c->students_count }}</td>
-<td class="text-right p-3 space-x-2"><a class="text-indigo-600" href="{{ route('classes.edit', $c) }}">Düzenle</a>
-<form class="inline" method="POST" action="{{ route('classes.destroy', $c) }}" onsubmit="return confirm('Silinsin mi?')">@csrf @method('DELETE')<button class="text-red-600">Sil</button></form></td></tr>
-@endforeach
+<x-page-head title="Sınıflar" sub="Sınıf, şube ve öğretmen atamaları">
+  <a href="{{ route('classes.create') }}" class="btn btn-primary"><x-icon name="plus" style="width:16px;height:16px" />Yeni sınıf</a>
+</x-page-head>
+<div class="card tbl-wrap">
+<table class="tbl">
+  <thead><tr><th>Sınıf</th><th>Kademe</th><th>Eğitim yılı</th><th>Öğretmen</th><th>Öğrenci</th><th></th></tr></thead>
+  <tbody>
+  @forelse($classes as $c)
+    <tr>
+      <td><div class="who"><span class="avatar-i" style="border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6)">{{ $c->name }}</span><b>{{ $c->label }}</b></div></td>
+      <td>{{ $c->grade_level }}. kademe</td><td>{{ $c->academic_year }}</td>
+      <td>@if($c->teacher){{ $c->teacher->user->name }}@else<span class="badge badge-warn">Atanmamış</span>@endif</td>
+      <td><a href="{{ route('students.index', ['class' => $c->id]) }}" class="badge badge-brand" style="text-decoration:none">{{ $c->students_count }} öğrenci</a></td>
+      <td><div class="ra"><a class="ibtn" href="{{ route('classes.edit', $c) }}">Düzenle</a><x-del :action="route('classes.destroy', $c)" icon /></div></td>
+    </tr>
+  @empty
+    <tr><td colspan="6"><x-empty icon="🏫" title="Henüz sınıf yok" text="İlk sınıfı oluşturup öğrencileri ekleyin."><a href="{{ route('classes.create') }}" class="btn btn-primary">Sınıf oluştur</a></x-empty></td></tr>
+  @endforelse
+  </tbody>
 </table>
-<div class="mt-4">{{ $classes->links() }}</div>
+</div>
+{{ $classes->links() }}
 @endsection

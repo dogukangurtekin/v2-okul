@@ -1,24 +1,24 @@
 @extends('layouts.app')
 @section('title', 'Yoklama')
 @section('content')
-<div class="flex justify-between mb-4"><h1 class="text-2xl font-bold">Yoklama</h1><a class="text-indigo-600" href="{{ route('attendance.report') }}">Devamsızlık raporu →</a></div>
-<form class="flex flex-wrap gap-2 mb-4">
-<select name="class" class="border rounded px-3 py-2 bg-white" required><option value="">Sınıf seçin</option>@foreach($classes as $c)<option value="{{ $c->id }}" @selected($class?->id === $c->id)>{{ $c->label }}</option>@endforeach</select>
-<input type="date" name="date" value="{{ $date }}" max="{{ today()->toDateString() }}" class="border rounded px-3 py-2">
-@if($courses->isNotEmpty())<select name="course" class="border rounded px-3 py-2 bg-white"><option value="">Genel (günlük)</option>@foreach($courses as $co)<option value="{{ $co->id }}" @selected($courseId === $co->id)>{{ $co->name }}</option>@endforeach</select>@endif
-<button class="bg-slate-700 text-white px-4 rounded">Getir</button></form>
+<x-page-head title="Yoklama" sub="Sınıf ve tarih seçip yoklamayı alın"><a class="btn btn-ghost" href="{{ route('attendance.report') }}">Devamsızlık raporu →</a></x-page-head>
+<form class="toolbar">
+<select name="class" class="field" style="width:auto" required><option value="">Sınıf seçin</option>@foreach($classes as $c)<option value="{{ $c->id }}" @selected($class?->id === $c->id)>{{ $c->label }}</option>@endforeach</select>
+<input type="date" name="date" value="{{ $date }}" max="{{ today()->toDateString() }}" class="field" style="width:auto">
+@if($courses->isNotEmpty())<select name="course" class="field" style="width:auto"><option value="">Genel (günlük)</option>@foreach($courses as $co)<option value="{{ $co->id }}" @selected($courseId === $co->id)>{{ $co->name }}</option>@endforeach</select>@endif
+<button class="btn btn-primary">Getir</button></form>
 @if($class)
-<form method="POST" action="{{ route('attendance.save') }}" class="max-w-3xl">@csrf
+<form method="POST" action="{{ route('attendance.save') }}" style="max-width:980px">@csrf
 <input type="hidden" name="school_class_id" value="{{ $class->id }}"><input type="hidden" name="date" value="{{ $date }}"><input type="hidden" name="course_id" value="{{ $courseId }}">
-<div class="flex gap-2 mb-2 text-sm">@foreach(config('school.attendance_statuses') as $k => $v)<button type="button" data-all="{{ $k }}" class="border rounded px-2 py-1 bg-white">Hepsi: {{ $v }}</button>@endforeach</div>
-<table class="w-full bg-white rounded-xl shadow text-sm">
+<div class="page-actions" style="margin-bottom:.7rem">@foreach(config('school.attendance_statuses') as $k => $v)<button type="button" data-all="{{ $k }}" class="btn btn-soft btn-sm">Hepsi: {{ $v }}</button>@endforeach</div>
+<div class="card tbl-wrap"><table class="tbl"><tbody>
 @forelse($students as $s)@php($cur = $existing[$s->id]->status ?? 'present')
-<tr class="border-b"><td class="p-2">{{ $s->user->name }} <span class="text-slate-400">{{ $s->student_no }}</span></td>
-<td class="p-2 space-x-2 whitespace-nowrap">@foreach(config('school.attendance_statuses') as $k => $v)<label><input type="radio" name="rows[{{ $s->id }}][status]" value="{{ $k }}" @checked($cur === $k)> {{ $v }}</label>@endforeach</td>
-<td class="p-2"><input name="rows[{{ $s->id }}][note]" value="{{ $existing[$s->id]->note ?? '' }}" maxlength="200" placeholder="Not" class="border rounded px-2 py-1 w-full"></td></tr>
-@empty<tr><td class="p-3 text-slate-500">Bu sınıfta öğrenci yok.</td></tr>@endforelse
-</table>
-@if($students->isNotEmpty())<button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded">Kaydet @if($existing->isNotEmpty())<span class="text-xs opacity-75">(güncelle)</span>@endif</button>@endif
+<tr><td><div class="who"><x-initials :name="$s->user->name" :size="32" /><div><b>{{ $s->user->name }}</b><small>{{ $s->student_no }}</small></div></div></td>
+<td style="white-space:nowrap"><div class="chip-pick" style="gap:.3rem">@foreach(config('school.attendance_statuses') as $k => $v)<label><input type="radio" name="rows[{{ $s->id }}][status]" value="{{ $k }}" @checked($cur === $k)> {{ $v }}</label>@endforeach</div></td>
+<td><input name="rows[{{ $s->id }}][note]" value="{{ $existing[$s->id]->note ?? '' }}" maxlength="200" placeholder="Not" class="field"></td></tr>
+@empty<tr><td><x-empty icon="👥" title="Bu sınıfta öğrenci yok" /></td></tr>@endforelse
+</tbody></table></div>
+@if($students->isNotEmpty())<div class="form-actions"><button class="btn btn-primary">Kaydet @if($existing->isNotEmpty())<span style="opacity:.75;font-size:.75rem">(güncelle)</span>@endif</button></div>@endif
 </form>
 <script>document.querySelectorAll('[data-all]').forEach(b => b.onclick = () => document.querySelectorAll('input[type=radio][value="'+b.dataset.all+'"]').forEach(r => r.checked = true));</script>
 @endif

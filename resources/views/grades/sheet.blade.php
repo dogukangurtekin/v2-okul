@@ -1,20 +1,21 @@
 @extends('layouts.app')
 @section('title', 'Not girişi')
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Not Girişi</h1>
-<form class="flex gap-2 mb-4"><select name="class" class="border rounded px-3 py-2 bg-white" onchange="this.form.submit()" required><option value="">Sınıf seçin</option>@foreach($classes as $c)<option value="{{ $c->id }}" @selected($class?->id === $c->id)>{{ $c->label }}</option>@endforeach</select></form>
+<x-page-head title="Not Girişi" sub="Bir sınıf seçip toplu not girin"><a class="btn btn-ghost" href="{{ route('grades.index') }}">Notlar →</a></x-page-head>
+<form class="toolbar"><select name="class" class="field" style="width:auto" onchange="this.form.submit()" required><option value="">Sınıf seçin</option>@foreach($classes as $c)<option value="{{ $c->id }}" @selected($class?->id === $c->id)>{{ $c->label }}</option>@endforeach</select></form>
 @if($class)
-<form method="POST" action="{{ route('grades.store') }}" class="max-w-3xl space-y-3">@csrf
+<form method="POST" action="{{ route('grades.store') }}" style="max-width:860px;display:grid;gap:1rem">@csrf
 <input type="hidden" name="school_class_id" value="{{ $class->id }}">
-<div class="bg-white p-4 rounded-xl shadow grid grid-cols-2 gap-2">
-<select name="exam_type" class="border rounded px-3 py-2">@foreach(config('school.exam_types') as $k => $t)<option value="{{ $k }}">{{ $t['label'] }} (ağırlık {{ $t['weight'] }})</option>@endforeach</select>
-<select name="course_id" class="border rounded px-3 py-2"><option value="">Ders (isteğe bağlı)</option>@foreach($courses as $co)<option value="{{ $co->id }}">{{ $co->name }}</option>@endforeach</select>
-<input name="title" maxlength="120" placeholder="Başlık (örn. 1. Yazılı)" class="border rounded px-3 py-2">
-<input type="date" name="exam_date" value="{{ today()->toDateString() }}" max="{{ today()->toDateString() }}" class="border rounded px-3 py-2" required>
-<input name="term" value="{{ $term }}" class="border rounded px-3 py-2 col-span-2" required></div>
-<table class="w-full bg-white rounded-xl shadow text-sm">
-@foreach($students as $s)<tr class="border-b"><td class="p-2">{{ $s->user->name }} <span class="text-slate-400">{{ $s->student_no }}</span></td><td class="p-2 w-32"><input name="scores[{{ $s->id }}]" inputmode="decimal" placeholder="0–100" class="border rounded px-2 py-1 w-full"></td></tr>@endforeach</table>
-<p class="text-xs text-slate-500">Boş bırakılan öğrenciye not eklenmez. Virgül veya nokta kullanabilirsiniz.</p>
-<button class="bg-indigo-600 text-white px-4 py-2 rounded">Kaydet</button></form>
+<div class="card form-card" style="max-width:none"><div class="fgrid">
+<x-fg label="Sınav türü"><select name="exam_type" class="field">@foreach(config('school.exam_types') as $k => $t)<option value="{{ $k }}">{{ $t['label'] }} (ağırlık {{ $t['weight'] }})</option>@endforeach</select></x-fg>
+<x-fg label="Ders"><select name="course_id" class="field"><option value="">Ders (isteğe bağlı)</option>@foreach($courses as $co)<option value="{{ $co->id }}">{{ $co->name }}</option>@endforeach</select></x-fg>
+<x-fg label="Başlık"><input name="title" maxlength="120" placeholder="Başlık (örn. 1. Yazılı)" class="field"></x-fg>
+<x-fg label="Sınav tarihi"><input type="date" name="exam_date" value="{{ today()->toDateString() }}" max="{{ today()->toDateString() }}" class="field" required></x-fg>
+<x-fg label="Dönem" full><input name="term" value="{{ $term }}" class="field" required></x-fg></div></div>
+<div class="card tbl-wrap"><table class="tbl"><tbody>
+@foreach($students as $s)<tr><td><div class="who"><x-initials :name="$s->user->name" :size="30" /><div><b>{{ $s->user->name }}</b><small>{{ $s->student_no }}</small></div></div></td><td style="width:140px"><input name="scores[{{ $s->id }}]" inputmode="decimal" placeholder="0–100" class="field"></td></tr>@endforeach
+</tbody></table></div>
+<p class="help">Boş bırakılan öğrenciye not eklenmez. Virgül veya nokta kullanabilirsiniz.</p>
+<div class="form-actions" style="margin:0"><button class="btn btn-primary">Kaydet</button></div></form>
 @endif
 @endsection

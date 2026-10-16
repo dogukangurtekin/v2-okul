@@ -133,7 +133,7 @@ class UserManagementImportQrTest extends TestCase
         $this->assertNull(User::where('email', '1004@school.local')->first());
         $this->assertSame(1, Student::where('student_no', '1001')->count());
         // Uretilen sifre sonuc sayfasinda gorunur ve hesapla eslesir; veritabaninda duz metin yoktur.
-        preg_match('#1001@school\.local</td><td class="font-mono">(\S{8})</td>#', $res->getContent(), $pm);
+        preg_match('#1001@school\\.local</td><td><code[^>]*>(\\S{8})</code>#', $res->getContent(), $pm);
         $this->assertNotEmpty($pm);
         $this->assertTrue(\Hash::check($pm[1], $ali->password));
     }

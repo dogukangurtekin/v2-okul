@@ -1,22 +1,23 @@
 @extends('layouts.app')
 @section('title', 'Oturum '.$session->join_code)
 @section('content')
-<div class="flex items-center gap-6 mb-4">
-  <div><div class="text-slate-500 text-sm">Katılım kodu</div><div class="text-5xl font-mono font-bold tracking-widest">{{ $session->join_code }}</div></div>
-  <div class="text-slate-600">{{ \App\Models\LiveSession::TYPES[$session->type] }}@if($session->quiz) · {{ $session->quiz->title }}@endif<br><span id="count">0</span> katılımcı · <span id="state"></span> · <span id="timer"></span></div>
+<x-page-head :title="'Oturum '.$session->join_code" :back="[route('live.index'), 'Oturumlar']" />
+<div class="card card-pad" style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;background:linear-gradient(135deg,#eef2ff,#fff)">
+  <div><div class="help">Katılım kodu</div><div style="font-size:3.2rem;line-height:1;font-weight:900;letter-spacing:.18em;font-family:ui-monospace,monospace;color:var(--brand-d)">{{ $session->join_code }}</div></div>
+  <div style="color:var(--muted);font-size:.92rem;line-height:1.7"><b style="color:var(--ink)">{{ \App\Models\LiveSession::TYPES[$session->type] }}</b>@if($session->quiz) · {{ $session->quiz->title }}@endif<br><b id="count" style="color:var(--ink)">0</b> katılımcı · <span id="state" class="badge badge-ok"></span> · <b id="timer" style="color:var(--ink)"></b></div>
 </div>
-<div class="flex gap-2 mb-4">
+<div class="page-actions" style="margin-bottom:1rem">
   @if($session->status === 'lobby')
-    <form method="POST" action="{{ route('live.lock', $session) }}">@csrf<button class="border rounded px-4 py-2 bg-white">Kilitle / aç</button></form>
-    <form method="POST" action="{{ route('live.start', $session) }}">@csrf<button class="bg-green-600 text-white rounded px-4 py-2">Başlat</button></form>
+    <form method="POST" action="{{ route('live.lock', $session) }}">@csrf<button class="btn btn-ghost">🔒 Kilitle / aç</button></form>
+    <form method="POST" action="{{ route('live.start', $session) }}">@csrf<button class="btn btn-primary">▶ Başlat</button></form>
   @endif
   @if($session->type === 'quiz' && $session->status === 'live')
-    <form method="POST" action="{{ route('live.next', $session) }}">@csrf<button class="bg-indigo-600 text-white rounded px-4 py-2">Sonraki soru / bitir</button></form>
+    <form method="POST" action="{{ route('live.next', $session) }}">@csrf<button class="btn btn-primary">Sonraki soru / bitir</button></form>
   @endif
-  <form method="POST" action="{{ route('live.finish', $session) }}" onsubmit="return confirm('Oturum bitirilsin ve XP dağıtılsın mı?')">@csrf<button class="bg-red-600 text-white rounded px-4 py-2">Bitir</button></form>
+  <form method="POST" action="{{ route('live.finish', $session) }}" onsubmit="return confirm('Oturum bitirilsin ve XP dağıtılsın mı?')">@csrf<button class="btn btn-danger">■ Bitir</button></form>
 </div>
-<div id="q" class="bg-white rounded-xl shadow p-5 mb-4 hidden"></div>
-<table class="w-full max-w-xl bg-white rounded-xl shadow text-sm"><tbody id="board"></tbody></table>
+<div id="q" class="card card-pad hidden" style="margin-bottom:1rem"></div>
+<div class="card tbl-wrap" style="max-width:640px"><table class="tbl"><tbody id="board"></tbody></table></div>
 <script>
 const URL_ = @json(route('live.status', $session)), TYPE = @json($session->type);
 let offset = 0, endsAt = null;
@@ -26,8 +27,8 @@ async function poll() {
   document.getElementById('count').textContent = j.count;
   document.getElementById('state').textContent = {lobby:'Bekleme', live:'Canlı', finished:'Bitti'}[j.status];
   const q = document.getElementById('q');
-  if (j.question) { q.classList.remove('hidden'); q.innerHTML = `<div class="text-slate-500 text-sm">Soru ${j.index+1} / ${j.total} · ${j.answered} yanıt</div><div class="text-xl font-semibold my-2">${esc(j.question.text)}</div>` + j.question.options.map((o,i)=>`<div class="${i===j.correct?'font-bold text-green-700':''}">${'ABCDEFGHIJ'[i]}) ${esc(o)}</div>`).join(''); } else q.classList.add('hidden');
-  document.getElementById('board').innerHTML = j.board.map((p,i)=>`<tr class="border-b"><td class="p-2">${i+1}</td><td>${esc(p.name)}</td><td class="text-right p-2">${TYPE==='quiz' ? p.score+' puan' : p.progress+'% · '+p.wpm+' KDK'}</td></tr>`).join('');
+  if (j.question) { q.classList.remove('hidden'); q.innerHTML = `<div class="help">Soru ${j.index+1} / ${j.total} · ${j.answered} yanıt</div><div style="font-size:1.2rem;font-weight:700;margin:.5rem 0">${esc(j.question.text)}</div>` + j.question.options.map((o,i)=>`<div class="${i===j.correct?'badge badge-ok':''}">${'ABCDEFGHIJ'[i]}) ${esc(o)}</div>`).join(''); } else q.classList.add('hidden');
+  document.getElementById('board').innerHTML = j.board.map((p,i)=>`<tr><td style="width:40px;font-weight:800">${i+1}</td><td>${esc(p.name)}</td><td style="text-align:right;font-weight:700">${TYPE==='quiz' ? p.score+' puan' : p.progress+'% · '+p.wpm+' KDK'}</td></tr>`).join('');
   if (j.status === 'finished') location.href = @json(route('live.report', $session));
 }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

@@ -1,19 +1,18 @@
 @extends('layouts.app')
 @section('title', 'Bildirimler')
 @section('content')
-<div class="flex justify-between mb-4"><h1 class="text-2xl font-bold">Bildirimler</h1>
-<form method="POST" action="{{ route('notifications.readall') }}">@csrf<button class="border rounded px-3 py-1 bg-white">Hepsini okundu yap</button></form></div>
-<div class="space-y-2 max-w-2xl mb-6">
+<x-page-head title="Bildirimler"><form method="POST" action="{{ route('notifications.readall') }}">@csrf<button class="btn btn-ghost">Hepsini okundu yap</button></form></x-page-head>
+<div style="display:grid;gap:.6rem;max-width:760px;margin-bottom:1.4rem">
 @forelse($items as $n)
-<form method="POST" action="{{ route('notifications.read', $n) }}" class="bg-white rounded-xl shadow p-4 {{ $n->pivot->read_at ? 'opacity-60' : 'border-l-4 border-indigo-500' }}">@csrf
-<button class="text-left w-full"><div class="font-semibold">{{ $n->title }}</div><div class="text-sm text-slate-600">{{ $n->body }}</div><div class="text-xs text-slate-400 mt-1">{{ $n->created_at->diffForHumans() }}</div></button></form>
-@empty<p class="text-slate-500">Bildirim yok.</p>@endforelse
+<form method="POST" action="{{ route('notifications.read', $n) }}" class="card" style="{{ $n->pivot->read_at ? 'opacity:.65' : 'border-left:4px solid var(--brand)' }}">@csrf
+<button style="text-align:left;width:100%;padding:.9rem 1.1rem;background:none;border:0;cursor:pointer"><div style="font-weight:700">{{ $n->title }}</div><div style="font-size:.88rem;color:#475569">{{ $n->body }}</div><div class="help" style="margin-top:.25rem">{{ $n->created_at->diffForHumans() }}</div></button></form>
+@empty<x-empty icon="🔔" title="Bildirim yok" />@endforelse
 </div>
 {{ $items->links() }}
-<div class="bg-white rounded-xl shadow p-4 max-w-2xl mt-6">
-  <div class="font-semibold mb-1">Anlık bildirimler (push)</div>
-  @if($vapid)<button id="pushbtn" class="bg-indigo-600 text-white px-3 py-1 rounded">Bu cihazda aç</button> <span id="pushmsg" class="text-sm text-slate-500"></span>
-  @else<p class="text-sm text-slate-500">Sunucuda push henüz yapılandırılmadı (README: VAPID).</p>@endif
+<div class="card card-pad" style="max-width:760px;margin-top:1.4rem">
+  <b style="display:block;margin-bottom:.4rem">Anlık bildirimler (push)</b>
+  @if($vapid)<button id="pushbtn" class="btn btn-primary btn-sm">Bu cihazda aç</button> <span id="pushmsg" class="help"></span>
+  @else<p class="help" style="margin:0">Sunucuda push henüz yapılandırılmadı (README: VAPID).</p>@endif
 </div>
 @if($vapid)
 <script>

@@ -1,18 +1,18 @@
 @extends('layouts.app')
 @section('title', 'Devamsızlık raporu')
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Devamsızlık Raporu</h1>
-<form class="flex flex-wrap gap-2 mb-4">
-<select name="class" class="border rounded px-3 py-2 bg-white" required><option value="">Sınıf seçin</option>@foreach($classes as $c)<option value="{{ $c->id }}" @selected($class?->id === $c->id)>{{ $c->label }}</option>@endforeach</select>
-<input type="date" name="from" value="{{ $from }}" class="border rounded px-3 py-2"><input type="date" name="to" value="{{ $to }}" class="border rounded px-3 py-2">
-<button class="bg-slate-700 text-white px-4 rounded">Göster</button>
-@if($class)<a class="border rounded px-3 py-2 bg-white" href="{{ route('attendance.export', ['class' => $class->id, 'from' => $from, 'to' => $to]) }}">CSV</a>@endif</form>
+<x-page-head title="Devamsızlık Raporu" :back="[route('attendance.sheet'), 'Yoklama']" />
+<form class="toolbar">
+<select name="class" class="field" style="width:auto" required><option value="">Sınıf seçin</option>@foreach($classes as $c)<option value="{{ $c->id }}" @selected($class?->id === $c->id)>{{ $c->label }}</option>@endforeach</select>
+<input type="date" name="from" value="{{ $from }}" class="field" style="width:auto"><input type="date" name="to" value="{{ $to }}" class="field" style="width:auto">
+<button class="btn btn-primary">Göster</button>
+@if($class)<a class="btn btn-ghost" href="{{ route('attendance.export', ['class' => $class->id, 'from' => $from, 'to' => $to]) }}">⬇ CSV</a>@endif</form>
 @if($class)
-<table class="w-full max-w-3xl bg-white rounded-xl shadow text-sm">
-<tr class="text-left border-b"><th class="p-3">Öğrenci</th><th>Geldi</th><th>Geç</th><th>İzinli</th><th>Gelmedi</th><th>Devam</th></tr>
-@foreach($students as $s)@php($a = $sum[$s->id])
-<tr class="border-b {{ ($a['rate'] ?? 100) < 85 ? 'bg-red-50' : '' }}"><td class="p-3">{{ $s->user->name }}</td><td>{{ $a['present'] }}</td><td>{{ $a['late'] }}</td><td>{{ $a['excused'] }}</td><td>{{ $a['absent'] }}</td><td class="font-semibold">{{ $a['rate'] !== null ? '%'.$a['rate'] : '—' }}</td></tr>
-@endforeach</table>
-<p class="text-xs text-slate-400 mt-2">Devam oranı: (geldi + geç) / (kayıtlar − izinli). %85 altı kırmızı.</p>
+<div class="card tbl-wrap" style="max-width:860px"><table class="tbl">
+<thead><tr><th>Öğrenci</th><th>Geldi</th><th>Geç</th><th>İzinli</th><th>Gelmedi</th><th>Devam</th></tr></thead><tbody>
+@foreach($students as $s)@php($a = $sum[$s->id])@php($low = ($a['rate'] ?? 100) < 85)
+<tr style="{{ $low ? 'background:#fef2f2' : '' }}"><td><div class="who"><x-initials :name="$s->user->name" :size="30" /><b>{{ $s->user->name }}</b></div></td><td>{{ $a['present'] }}</td><td>{{ $a['late'] }}</td><td>{{ $a['excused'] }}</td><td>{{ $a['absent'] }}</td><td><span class="badge {{ $low ? 'badge-bad' : 'badge-ok' }}">{{ $a['rate'] !== null ? '%'.$a['rate'] : '—' }}</span></td></tr>
+@endforeach</tbody></table></div>
+<p class="help" style="margin-top:.6rem">Devam oranı: (geldi + geç) / (kayıtlar − izinli). %85 altı kırmızı.</p>
 @endif
 @endsection
