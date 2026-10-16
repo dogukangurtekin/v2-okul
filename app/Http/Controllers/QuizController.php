@@ -24,14 +24,19 @@ class QuizController extends Controller
 
     public function create()
     {
-        return view('quizzes.form', ['quiz' => new Quiz]);
+        return view('quizzes.form', ['quiz' => new Quiz, 'existing' => []]);
     }
 
     public function edit(Quiz $quiz)
     {
         $this->owned($quiz);
 
-        return view('quizzes.form', ['quiz' => $quiz->load('questions')]);
+        $quiz->load('questions');
+
+        return view('quizzes.form', ['quiz' => $quiz, 'existing' => $quiz->questions->map(fn ($q) => [
+            'text' => $q->text, 'options' => implode("\n", $q->options), 'correct' => $q->correct_index,
+            'duration' => $q->duration_sec, 'xp' => $q->xp, 'double' => $q->double_xp,
+        ])->values()->all()]);
     }
 
     private function save(Request $request, Quiz $quiz): Quiz

@@ -23,7 +23,7 @@
 </div>
 </template>
 <script>
-const existing = @json($quiz->exists ? $quiz->questions->map(fn($q) => ['text'=>$q->text,'options'=>implode("\n",$q->options),'correct'=>$q->correct_index,'duration'=>$q->duration_sec,'xp'=>$q->xp,'double'=>$q->double_xp])->values() : []);
+const existing = @json($existing);
 let n = 0; const box = document.getElementById('qs');
 function add(d) { const html = document.getElementById('tpl').innerHTML.replaceAll('__I__', n++); const w = document.createElement('div'); w.innerHTML = html; const el = w.firstElementChild;
   if (d) { const f = (k) => el.querySelector(`[name$="[${k}]"]`); f('text').value=d.text; f('options').value=d.options; f('correct').value=d.correct; f('duration').value=d.duration; f('xp').value=d.xp; f('double').checked=!!d.double; }
