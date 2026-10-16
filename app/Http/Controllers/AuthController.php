@@ -8,7 +8,8 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login');
+        // Giriş sayfası önbelleğe/geri tuşuna takılmasın: eski CSRF anahtarı 419 üretir.
+        return response()->view('auth.login')->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
     public function login(Request $request)

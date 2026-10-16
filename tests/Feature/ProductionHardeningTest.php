@@ -83,4 +83,12 @@ class ProductionHardeningTest extends TestCase
             $this->assertContains($p, $lines, "$p .gitignore'da yok");
         }
     }
+
+    public function test_login_page_is_not_cacheable_and_419_redirects_gracefully(): void
+    {
+        $this->get('/login')->assertOk()->assertHeader('Cache-Control', 'max-age=0, must-revalidate, no-cache, no-store, private');
+
+        \Illuminate\Support\Facades\Route::middleware('web')->post('/yaz-419', fn () => throw new \Illuminate\Session\TokenMismatchException('x'));
+        $this->from('/login')->post('/yaz-419')->assertRedirect('/login')->assertSessionHasErrors('csrf');
+    }
 }
