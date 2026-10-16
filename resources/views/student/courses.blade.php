@@ -16,7 +16,7 @@
       <h3>{{ $c->name }}</h3>
       <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin:.5rem 0 .8rem">@if($c->category)<span class="s-chip">{{ $c->category }}</span>@endif @if($c->difficulty)<span class="s-chip pink">{{ $c->difficulty }}</span>@endif<span class="s-chip">{{ $c->slides_count }} slayt</span></div>
       <div class="xpbar" style="height:10px"><i data-pct="{{ $pct }}" style="width:0"></i></div>
-      <div style="font-size:.78rem;font-weight:800;color:#7c3aed;margin-top:.3rem">%{{ $pct }}</div>
+      <div style="font-size:.78rem;font-weight:800;color:var(--brand);margin-top:.3rem">%{{ $pct }}</div>
     </div>
   </a>
 @empty

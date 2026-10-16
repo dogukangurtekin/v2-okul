@@ -10,7 +10,7 @@
   <tbody>
   @forelse($classes as $c)
     <tr>
-      <td><div class="who"><span class="avatar-i" style="border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6)">{{ $c->name }}</span><b>{{ $c->label }}</b></div></td>
+      <td><div class="who"><span class="avatar-i" style="border-radius:12px;background:var(--brand)">{{ $c->name }}</span><b>{{ $c->label }}</b></div></td>
       <td>{{ $c->grade_level }}. kademe</td><td>{{ $c->academic_year }}</td>
       <td>@if($c->teacher){{ $c->teacher->user->name }}@else<span class="badge badge-warn">Atanmamış</span>@endif</td>
       <td><a href="{{ route('students.index', ['class' => $c->id]) }}" class="badge badge-brand" style="text-decoration:none">{{ $c->students_count }} öğrenci</a></td>

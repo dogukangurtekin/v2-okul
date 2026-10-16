@@ -42,7 +42,7 @@
   <div style="display:grid;gap:.6rem">
   @foreach($course->slides as $slide)
     <details class="card" style="overflow:hidden"><summary style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1.1rem;cursor:pointer;list-style:none">
-      <span class="avatar-i" style="width:30px;height:30px;font-size:.78rem;border-radius:9px;background:#6366f1">{{ $slide->position + 1 }}</span>
+      <span class="avatar-i" style="width:30px;height:30px;font-size:.78rem;border-radius:9px;background:#2447f5">{{ $slide->position + 1 }}</span>
       <b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $slide->title ?: '(başlıksız)' }}</b>
       <span class="badge badge-brand">{{ \App\Models\CourseSlide::TYPES[$slide->type] ?? $slide->type }}</span>@if($slide->type === 'quiz')<span class="badge">{{ ['choice' => 'seçmeli', 'short' => 'kısa cevap', 'matching' => 'eşleştirme'][$slide->content['mode'] ?? 'choice'] }}</span>@endif</summary>
       <form method="POST" action="{{ route('slides.update', [$course, $slide]) }}" style="padding:0 1.1rem 1.1rem;border-top:1px solid var(--line);padding-top:1rem">@csrf @method('PUT')

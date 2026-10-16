@@ -12,7 +12,7 @@
   <div>
     <div class="bubble me"><small>Sen · {{ $m->created_at->format('d.m H:i') }} · {{ $m->recipient_type === 'admin' ? 'Yönetici' : 'Öğretmen' }}</small><span style="white-space:pre-line">{{ $m->body }}</span></div>
     @if($m->reply_body)<div class="bubble" style="margin-top:.5rem;background:#ecfdf5;border-color:#a7f3d0"><small>{{ $m->replier?->name }} yanıtladı</small><span style="white-space:pre-line">{{ $m->reply_body }}</span></div>
-    @else<div style="font-size:.78rem;color:#8b5cf6;font-weight:800;margin:.3rem 0 0 .5rem">⏳ Yanıt bekleniyor…</div>@endif
+    @else<div style="font-size:.78rem;color:var(--brand);font-weight:800;margin:.3rem 0 0 .5rem">⏳ Yanıt bekleniyor…</div>@endif
   </div>
 @endforeach
 @if($messages->isEmpty())<div class="s-card" style="text-align:center;padding:2rem"><div style="font-size:2.6rem">📭</div><h3>Henüz mesajın yok</h3></div>@endif

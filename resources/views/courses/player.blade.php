@@ -15,7 +15,7 @@
 <style>
 .rich h1,.rich h2,.rich h3,.rich h4{font-weight:700;margin:.6em 0 .3em}.rich h1{font-size:1.6rem}.rich h2{font-size:1.35rem}.rich h3{font-size:1.15rem}
 .rich p{margin:.5em 0}.rich ul{list-style:disc;padding-left:1.4rem;margin:.5em 0}.rich ol{list-style:decimal;padding-left:1.4rem;margin:.5em 0}
-.rich a{color:#4f46e5;text-decoration:underline}.rich img{max-width:100%;height:auto;border-radius:.5rem;margin:.5em 0}.rich blockquote{border-left:4px solid #cbd5e1;padding-left:.8rem;color:#475569}
+.rich a{color:#2447f5;text-decoration:underline}.rich img{max-width:100%;height:auto;border-radius:.5rem;margin:.5em 0}.rich blockquote{border-left:4px solid #cbd5e1;padding-left:.8rem;color:#475569}
 .rich table{border-collapse:collapse}.rich td,.rich th{border:1px solid #cbd5e1;padding:.3rem .6rem}.rich pre{background:#0f172a;color:#86efac;padding:.8rem;border-radius:.5rem;overflow:auto}
 </style>
 <div class="p-wrap"><div class="xpbar p-bar"><i id="pbar" style="width:0"></i></div>

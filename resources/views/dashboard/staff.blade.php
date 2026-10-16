@@ -12,7 +12,7 @@
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem" class="rise">
   @foreach([
-    ['Öğrenci', $stats['students'], 'cap', '#eef2ff', '#4f46e5', route('students.index')],
+    ['Öğrenci', $stats['students'], 'cap', '#e4eaff', '#2447f5', route('students.index')],
     ['Sınıf', $stats['classes'], 'building', '#ecfeff', '#0891b2', route('classes.index')],
     ['Ders', $stats['courses'], 'book', '#fef3c7', '#d97706', route('courses.index')],
     ['Şu an çevrimiçi', $stats['active'], 'monitor', '#dcfce7', '#16a34a', route('tracking.index')],
@@ -31,7 +31,7 @@
       @foreach($chart as $b)
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;height:100%;justify-content:flex-end">
           <small style="color:var(--muted);font-weight:600">{{ $b['n'] ?: '' }}</small>
-          <div style="width:100%;max-width:46px;border-radius:10px 10px 4px 4px;height:{{ max(6, round($b['n'] / $chartMax * 100)) }}%;background:{{ $b['today'] ? 'linear-gradient(180deg,#6366f1,#8b5cf6)' : '#e0e7ff' }};transition:height .8s var(--ease)"></div>
+          <div style="width:100%;max-width:46px;border-radius:10px 10px 4px 4px;height:{{ max(6, round($b['n'] / $chartMax * 100)) }}%;background:{{ $b['today'] ? 'linear-gradient(180deg,#2447f5,var(--brand))' : '#e0e7ff' }};transition:height .8s var(--ease)"></div>
           <small style="font-weight:{{ $b['today'] ? 800 : 600 }};color:{{ $b['today'] ? 'var(--brand)' : 'var(--muted)' }}">{{ $b['label'] }}</small>
         </div>
       @endforeach
@@ -44,7 +44,7 @@
     @php($att = $attendance)
     <a href="{{ route('attendance.sheet') }}" style="display:block;text-decoration:none;color:inherit;margin-bottom:1rem">
       <div style="display:flex;justify-content:space-between;font-size:.88rem;font-weight:600"><span>📅 Yoklama</span><span>{{ $att['taken'] }} / {{ $att['total'] }} sınıf</span></div>
-      <div style="height:8px;border-radius:99px;background:#eef2ff;margin-top:.4rem;overflow:hidden"><div data-pct="{{ $att['total'] ? round($att['taken'] / $att['total'] * 100) : 0 }}" style="height:100%;background:linear-gradient(90deg,#6366f1,#22c55e);border-radius:inherit;transition:width 1s var(--ease)"></div></div>
+      <div style="height:8px;border-radius:99px;background:#e4eaff;margin-top:.4rem;overflow:hidden"><div data-pct="{{ $att['total'] ? round($att['taken'] / $att['total'] * 100) : 0 }}" style="height:100%;background:linear-gradient(90deg,#2447f5,#22c55e);border-radius:inherit;transition:width 1s var(--ease)"></div></div>
     </a>
     <div style="display:grid;gap:.5rem;font-size:.9rem">
       @if($support)<a href="{{ route('support.index') }}" class="btn btn-soft" style="justify-content:flex-start">🛟 {{ $support }} okunmamış destek talebi</a>@endif

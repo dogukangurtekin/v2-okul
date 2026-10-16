@@ -34,7 +34,7 @@ function lists() {
   fill($('lm'), main); fill($('lp'), proc);
   $('cm').textContent = `${main.length}/${L.main_max}`; $('cp').textContent = `${proc.length}/${L.proc_max}`;
   $('pw').style.display = L.proc_max > 0 ? '' : 'none';
-  $('lm').style.outline = target === 'main' ? '2px solid #6366f1' : ''; $('lp').style.outline = target === 'proc' ? '2px solid #6366f1' : '';
+  $('lm').style.outline = target === 'main' ? '2px solid #2447f5' : ''; $('lp').style.outline = target === 'proc' ? '2px solid #2447f5' : '';
   $('pal').innerHTML = ['F','L','R','X'].concat(L.proc_max > 0 && target === 'main' ? ['P'] : []).map(c => `<button data-c="${c}" class="px-3 py-1 bg-indigo-600 text-white rounded">${IC[c]}</button>`).join('');
   $('pal').querySelectorAll('button').forEach(b => b.onclick = () => { if (busy) return; const arr = target === 'main' ? main : proc, max = target === 'main' ? L.main_max : L.proc_max; if (arr.length < max) { arr.push(b.dataset.c); lists(); } });
 }

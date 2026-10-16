@@ -40,11 +40,11 @@
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.1rem">
     @if($resume)
-      <section class="s-card" style="background:linear-gradient(135deg,#eff6ff,#f5f3ff)">
+      <section class="s-card" style="background:#fff">
         <div class="s-chip">▶️ Kaldığın yerden devam et</div>
         <h3 style="margin:.6rem 0 .8rem;font-size:1.3rem">{{ $resume['course']->name }}</h3>
         <div class="xpbar" style="height:12px"><i data-pct="{{ round($resume['at'] / $resume['total'] * 100) }}" style="width:0"></i></div>
-        <div style="font-size:.82rem;font-weight:800;color:#6d28d9;margin:.35rem 0 1rem">Slayt {{ $resume['at'] }} / {{ $resume['total'] }}</div>
+        <div style="font-size:.82rem;font-weight:800;color:var(--brand);margin:.35rem 0 1rem">Slayt {{ $resume['at'] }} / {{ $resume['total'] }}</div>
         <a class="s-btn" href="{{ route('student.courses.show', $resume['course']) }}">Devam et →</a>
       </section>
     @endif
@@ -59,7 +59,7 @@
           <span class="s-chip warn">+{{ $a->xp_reward }} XP</span>
         </a>
       @empty
-        <div style="text-align:center;padding:1.2rem 0;color:#7c3aed;font-weight:800"><div style="font-size:2.6rem">🎉</div>Bekleyen ödevin yok!</div>
+        <div style="text-align:center;padding:1.2rem 0;color:var(--brand);font-weight:800"><div style="font-size:2.6rem">🎉</div>Bekleyen ödevin yok!</div>
       @endforelse
     </section>
   </div>
@@ -70,7 +70,7 @@
       @foreach($badges as $b)@php($has = in_array($b->id, $earned))
         <div title="{{ $b->name }} — {{ $b->description }}" style="text-align:center;width:84px;{{ $has ? '' : 'filter:grayscale(1);opacity:.45' }}">
           <div class="{{ $has ? 'pop' : '' }}" style="font-size:2.4rem;{{ $has ? 'animation-delay:'.($loop->index * .12).'s' : '' }}">{{ $has ? $b->emoji : '🔒' }}</div>
-          <div style="font-size:.74rem;font-weight:800">{{ $b->name }}</div><div style="font-size:.68rem;color:#8b5cf6;font-weight:700">{{ $b->xp_threshold }} XP</div>
+          <div style="font-size:.74rem;font-weight:800">{{ $b->name }}</div><div style="font-size:.68rem;color:var(--brand);font-weight:700">{{ $b->xp_threshold }} XP</div>
         </div>
       @endforeach
     </div>

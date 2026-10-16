@@ -2,7 +2,7 @@
 @section('title', 'Gelişim Karnesi')
 @section('content')
 <div class="card" id="card" style="max-width:820px;margin:0 auto;overflow:hidden">
-  <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:1.6rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+  <div style="background:var(--brand);color:#fff;padding:1.6rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
     <div><h1 style="margin:0;font-size:1.6rem;font-weight:800">Gelişim Karnesi</h1><p style="margin:.2rem 0 0;opacity:.8">{{ now()->format('d.m.Y') }}</p></div>
     <div style="font-size:3.4rem;line-height:1">{{ $student->avatar?->emoji ?? '🎓' }}</div>
   </div>

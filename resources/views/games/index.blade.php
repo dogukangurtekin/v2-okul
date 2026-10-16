@@ -15,7 +15,7 @@
       <b class="s-chip {{ $doneN >= $levels ? 'ok' : ($doneN ? 'warn' : '') }}" style="position:absolute;top:.7rem;right:.7rem">{{ $doneN >= $levels ? '🏆 Bitti' : ($doneN ? '▶️ Devam' : ($ready ? '✨ Yeni' : '🔧 Yakında')) }}</b></div>
     <div style="padding:.9rem 1.2rem 1.2rem">
       <h3>{{ config("games.$slug") }}</h3>
-      <div style="display:flex;justify-content:space-between;font-size:.78rem;font-weight:800;color:#7c3aed;margin:.6rem 0 .25rem"><span>Seviye</span><span>{{ $doneN }} / {{ $levels }}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;font-weight:800;color:var(--brand);margin:.6rem 0 .25rem"><span>Seviye</span><span>{{ $doneN }} / {{ $levels }}</span></div>
       <div class="xpbar" style="height:10px"><i data-pct="{{ round($doneN / max(1, $levels) * 100) }}" style="width:0"></i></div>
     </div>
   </a>

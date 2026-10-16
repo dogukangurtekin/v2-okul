@@ -2,7 +2,7 @@
 @section('title', 'Oturum '.$session->join_code)
 @section('content')
 <x-page-head :title="'Oturum '.$session->join_code" :back="[route('live.index'), 'Oturumlar']" />
-<div class="card card-pad" style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;background:linear-gradient(135deg,#eef2ff,#fff)">
+<div class="card card-pad" style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;background:#fff">
   <div><div class="help">Katılım kodu</div><div style="font-size:3.2rem;line-height:1;font-weight:900;letter-spacing:.18em;font-family:ui-monospace,monospace;color:var(--brand-d)">{{ $session->join_code }}</div></div>
   <div style="color:var(--muted);font-size:.92rem;line-height:1.7"><b style="color:var(--ink)">{{ \App\Models\LiveSession::TYPES[$session->type] }}</b>@if($session->quiz) · {{ $session->quiz->title }}@endif<br><b id="count" style="color:var(--ink)">0</b> katılımcı · <span id="state" class="badge badge-ok"></span> · <b id="timer" style="color:var(--ink)"></b></div>
 </div>

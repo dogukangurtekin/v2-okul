@@ -19,8 +19,8 @@
 @endif
 <div style="max-width:620px;display:grid;gap:.6rem" class="rise">
   @foreach($top as $i => $s)
-    <div class="s-card" style="display:flex;align-items:center;gap:.9rem;padding:.7rem 1rem;{{ $s->id === $student->id ? 'background:linear-gradient(120deg,#f5f3ff,#fdf2f8);border-color:#a78bfa' : '' }}">
-      <b style="width:2rem;text-align:center;font-family:var(--font-display);font-size:1.15rem;color:{{ ['#d97706', '#64748b', '#c2410c'][$i] ?? '#a78bfa' }}">{{ $i + 1 }}</b>
+    <div class="s-card" style="display:flex;align-items:center;gap:.9rem;padding:.7rem 1rem;{{ $s->id === $student->id ? 'background:#fff3c4;border-color:#8fb5ff' : '' }}">
+      <b style="width:2rem;text-align:center;font-family:var(--font-display);font-size:1.15rem;color:{{ ['#d97706', '#64748b', '#c2410c'][$i] ?? '#8fb5ff' }}">{{ $i + 1 }}</b>
       <span style="font-size:1.9rem">{{ $s->avatar?->emoji ?? '🙂' }}</span>
       <b style="flex:1">{{ $s->user->name }}@if($s->id === $student->id) <span class="s-chip" style="margin-left:.3rem">Sen</span>@endif</b>
       <span class="s-chip warn">{{ $s->xp_total }} XP</span>

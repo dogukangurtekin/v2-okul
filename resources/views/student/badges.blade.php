@@ -6,7 +6,7 @@
 @if($next)
   <div class="s-card" style="margin-bottom:1.2rem;max-width:620px;background:linear-gradient(135deg,#fefce8,#fdf2f8)">
     <div style="display:flex;align-items:center;gap:1rem"><span style="font-size:2.6rem;filter:grayscale(.6)">{{ $next->emoji }}</span>
-      <div style="flex:1"><h3>Sıradaki rozet: {{ $next->name }}</h3><div style="font-size:.85rem;font-weight:700;color:#7c3aed">{{ $next->description }} · {{ max(0, $next->xp_threshold - $student->xp_total) }} XP kaldı</div>
+      <div style="flex:1"><h3>Sıradaki rozet: {{ $next->name }}</h3><div style="font-size:.85rem;font-weight:700;color:var(--brand)">{{ $next->description }} · {{ max(0, $next->xp_threshold - $student->xp_total) }} XP kaldı</div>
       <div class="xpbar" style="height:10px;margin-top:.5rem"><i data-pct="{{ min(100, round($student->xp_total / max(1, $next->xp_threshold) * 100)) }}" style="width:0"></i></div></div></div>
   </div>
 @endif
