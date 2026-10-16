@@ -14,3 +14,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
 @endif
 <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ $cssV }}">
+@if(auth()->check() && auth()->user()->hasRole('student'))
+<script>(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem('theme')}catch(e){}d.dataset.theme=(t==='dark'||t==='light')?t:@json(\App\Support\AgeBand::current() === 'teen' ? 'dark' : 'light');})();</script>
+@endif

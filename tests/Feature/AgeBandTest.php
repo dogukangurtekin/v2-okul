@@ -36,7 +36,7 @@ class AgeBandTest extends TestCase
         $this->seed(DatabaseSeeder::class);
         foreach ([[2, 'kid', 's-hero'], [6, 'mid', 'm-hero'], [10, 'teen', 't-read']] as [$grade, $band, $marker]) {
             $u = $this->studentInGrade($grade);
-            $this->actingAs($u)->get('/dashboard')->assertOk()->assertSee("band-$band", false)->assertSee($marker, false);
+            $this->actingAs($u)->get('/dashboard')->assertOk()->assertSee("band-$band", false)->assertSee($marker, false)->assertSee('id="themeBtn"', false)->assertSee("'".($band === 'teen' ? 'dark' : 'light')."'", false);
             foreach (['/ogrenci/derslerim', '/ogrenci/odevlerim', '/ogrenci/avatarlarim', '/ogrenci/rozetlerim', '/ogrenci/siralama', '/ogrenci/arkadaslarim', '/ogrenci/sinif-panosu', '/ogrenci/canli', '/ogrenci/karnem', '/ogrenci/devamsizlik', '/ogrenci/notlarim', '/ogrenci/mesajlar', '/duyurular', '/bildirimlerim', '/etkinlikler'] as $url) {
                 $this->actingAs($u)->get($url)->assertOk();
             }

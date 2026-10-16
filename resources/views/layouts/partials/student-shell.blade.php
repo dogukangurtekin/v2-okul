@@ -36,7 +36,9 @@
                     <span class="av">{{ $emoji }}</span>
                     <span><b>{{ $band === 'kid' ? $lv['icon'].' ' : '' }}{{ $band === 'teen' ? 'LV '.$lv['level'].' · ' : 'Sv. '.$lv['level'].' · ' }}{{ $lv['xp'] }} XP</b><span class="xpbar"><i data-pct="{{ $lv['pct'] }}" style="width:{{ $lv['pct'] }}%"></i></span></span>
                 </a>
-                <form method="POST" action="{{ route('logout') }}">@csrf<button class="s-chip" style="border:0;cursor:pointer;font-family:inherit" title="Çıkış yap">Çıkış</button></form>
+                <button type="button" class="theme-btn" id="themeBtn" aria-label="Gece / gündüz modu" title="Gece / gündüz modu">
+                    <span class="i-moon">@if($band === 'kid')🌙@else<x-icon name="moon" />@endif</span><span class="i-sun">@if($band === 'kid')☀️@else<x-icon name="sun" />@endif</span></button>
+                <form method="POST" action="{{ route('logout') }}">@csrf<button class="s-chip" style="cursor:pointer;font-family:inherit" title="Çıkış yap">Çıkış</button></form>
             </div>
         </div>
     </header>
@@ -48,6 +50,13 @@
                 <form method="POST" action="{{ route('logout') }}">@csrf<button>@if($band === 'kid')<span>🚪</span>@else<x-icon name="logout" class="nv" />@endif Çıkış yap</button></form></div></details>
     </nav>
     @include('layouts.partials.flash')
+    <script>
+    // Gece / gündüz modu: tercih bu cihazda saklanır
+    document.getElementById('themeBtn')?.addEventListener('click', function () {
+      var d = document.documentElement, n = d.dataset.theme === 'dark' ? 'light' : 'dark';
+      d.dataset.theme = n; try { localStorage.setItem('theme', n); } catch (e) {}
+    });
+    </script>
     <script>
     // Etkin süre: sekme görünürken 30 sn'de bir sunucuya bildir.
     setInterval(() => { if (document.visibilityState === 'visible') fetch(@json(route('student.ping')), {method:'POST', headers:{'X-CSRF-TOKEN':@json(csrf_token()),Accept:'application/json'}}); }, 30000);
