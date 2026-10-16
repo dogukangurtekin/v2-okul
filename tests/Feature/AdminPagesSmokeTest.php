@@ -43,6 +43,7 @@ class AdminPagesSmokeTest extends TestCase
         $assignment->classes()->sync([$class->id]);
         $session = app(\App\Services\LiveSessionService::class)->create($admin, ['type' => 'quiz', 'quiz_id' => $quiz->id, 'config' => []]);
         $announcement = Announcement::create(['title' => 'Duyuru', 'content' => 'x', 'audience' => 'all', 'published_by' => $admin->id, 'published_at' => now()]);
+        app(\App\Services\XpService::class)->award($student, 10, 'test');
         $support = SupportRequest::create(['sender_user_id' => $tUser->id, 'subject' => 'Konu', 'message' => 'm', 'category' => 'other']);
 
         return compact('admin', 'tUser', 'sUser', 'student', 'class', 'course', 'quiz', 'assignment', 'session', 'announcement', 'support', 'teacher');
