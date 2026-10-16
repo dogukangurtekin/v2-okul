@@ -14,9 +14,9 @@ return [
     'lightbot-runner' => ['emoji' => '🤖', 'kind' => 'native', 'levels' => 6, 'xp' => 12, 'verifier' => \App\Games\LightbotVerifier::class],
     'line-trace-runner' => ['emoji' => '〰️', 'kind' => 'bundle', 'levels' => 100, 'xp' => 10],
     'silent-teacher-runner' => ['emoji' => '🐍', 'kind' => 'native', 'levels' => 12, 'xp' => 10, 'verifier' => \App\Games\SilentTeacherVerifier::class],
-    'flamestone-game' => ['emoji' => '🔥', 'kind' => 'bundle', 'levels' => 10, 'xp' => 10],
+    'flamestone-game' => ['emoji' => '🔥', 'kind' => 'bundle', 'levels' => 50, 'xp' => 10],
     'keyboard-race' => ['emoji' => '⌨️', 'kind' => 'native', 'levels' => 5, 'xp' => 8],
-    'block-builder-studio' => ['emoji' => '🏗️', 'kind' => 'bundle', 'levels' => 1, 'xp' => 10],
+    'block-builder-studio' => ['emoji' => '🏗️', 'kind' => 'native', 'levels' => 1, 'xp' => 10],
     'connect-the-dots-runner' => ['emoji' => '🔵', 'kind' => 'bundle', 'levels' => 50, 'xp' => 10],
     'python-editor' => ['emoji' => '📝', 'kind' => 'native', 'levels' => 8, 'xp' => 10, 'verifier' => \App\Games\PythonEditorVerifier::class,
         // Pyodide (Python/WebAssembly). Okul internetsizse dosyaları public/vendor/pyodide/ altına kopyalayıp PYODIDE_URL=/vendor/pyodide/ verin.

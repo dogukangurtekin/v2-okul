@@ -55,6 +55,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/etkinlikler', [GameController::class, 'index'])->name('games.index');
     Route::get('/oyun/{slug}', [GameController::class, 'play'])->name('games.play');
+    Route::view('/block-builder-studio', 'block-builder.index')->name('block-builder.index');
+    Route::prefix('/block-builder-studio/designs')->name('block-builder.designs.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\BlockBuilderStudioController::class, 'index'])->name('index');
+        Route::get('/latest', [\App\Http\Controllers\BlockBuilderStudioController::class, 'latest'])->name('latest');
+        Route::get('/{id}', [\App\Http\Controllers\BlockBuilderStudioController::class, 'show'])->whereNumber('id')->name('show');
+        Route::post('/', [\App\Http\Controllers\BlockBuilderStudioController::class, 'store'])->middleware('throttle:60,1')->name('store');
+        Route::delete('/{id}', [\App\Http\Controllers\BlockBuilderStudioController::class, 'destroy'])->whereNumber('id')->name('destroy');
+    });
     Route::get('/runner-grant/{slug}', [GameController::class, 'grant'])->name('games.grant');
     Route::get('/connect-the-dots-runner/levels', fn () => response()->file(public_path('runner-assets/connect-the-dots-runner/levels.json'), ['Content-Type' => 'application/json']))->name('games.dots-levels');
     Route::post('/oyun/{slug}/sonuc', [GameController::class, 'result'])->middleware(['role:student', 'throttle:60,1'])->name('games.result');

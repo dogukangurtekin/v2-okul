@@ -69,10 +69,16 @@ class GamesTest extends TestCase
         $this->assertSame(8 + 8 + 30, $student->fresh()->xp_total);
     }
 
-    public function test_unimplemented_game_shows_soon_page_for_admin(): void
+    public function test_flamestone_and_block_builder_open_and_designs_are_per_user(): void
     {
         [$admin] = $this->world();
-        $this->actingAs($admin)->get('/oyun/flamestone-game')->assertOk()->assertSee('henüz v2');
+        $this->actingAs($admin)->get('/oyun/flamestone-game')->assertOk()->assertSee('runner-assets/flamestone-game/index.html', false);
+        $this->actingAs($admin)->get('/oyun/block-builder-studio')->assertOk()->assertSee('block-builder-studio', false);
+        $this->actingAs($admin)->get('/block-builder-studio')->assertOk()->assertSee('block-builder-page.js', false);
+        $id = $this->actingAs($admin)->postJson('/block-builder-studio/designs', ['name' => 'Kule', 'blocks' => [['x' => 0, 'y' => 0, 'z' => 0, 'color' => '#ff0000']]])->assertOk()->json('design.id');
+        $this->actingAs($admin)->getJson("/block-builder-studio/designs/$id")->assertOk()->assertJsonPath('design.name', 'Kule');
+        $other = \App\Models\User::factory()->create();
+        $this->actingAs($other)->getJson("/block-builder-studio/designs/$id")->assertNotFound();
     }
 
     public function test_bundle_game_serves_iframe_and_grant_for_admin(): void
