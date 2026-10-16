@@ -5,6 +5,10 @@
   <div class="s-card" style="text-align:center;padding:3rem 1rem"><div style="font-size:3.5rem">🧩</div><h3>Hesabın henüz bir öğrenci kaydına bağlı değil</h3><p style="color:#6b7280">Öğretmenine haber ver.</p></div>
 @else
 @php($emoji = $student->avatar?->emoji ?? '🙂')
+@php($band = \App\Support\AgeBand::current())
+@if($band !== 'kid')
+  @include('dashboard.student-'.$band)
+@else
 <div class="rise" style="display:grid;gap:1.1rem">
   <section class="s-hero">
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem">
@@ -80,5 +84,6 @@
     <section class="s-card" style="border-color:#fde68a;background:#fffbeb"><h3>📢 {{ $x->title }}</h3><div style="color:#78350f;margin-top:.3rem;font-weight:600;font-size:.92rem">{{ \Illuminate\Support\Str::limit($x->content, 200) }}</div></section>
   @endforeach
 </div>
+@endif
 @endif
 @endsection
