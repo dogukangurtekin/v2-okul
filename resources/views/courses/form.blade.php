@@ -51,7 +51,7 @@
       <form id="del-{{ $slide->id }}" method="POST" action="{{ route('slides.destroy', [$course, $slide]) }}" onsubmit="return confirm('Slayt silinsin mi?')">@csrf @method('DELETE')</form>
     </details>
   @endforeach
-  <details class="card" style="border:2px dashed #c7d2fe;background:#fafaff" @if($course->slides->isEmpty() || $errors->any()) open @endif><summary style="padding:.9rem 1.1rem;cursor:pointer;font-weight:700;color:var(--brand-d);list-style:none">＋ Yeni slayt ekle</summary>
+  <details class="card" style="border:2px dashed var(--tint-brand-bd);background:var(--tint-soft)" @if($course->slides->isEmpty() || $errors->any()) open @endif><summary style="padding:.9rem 1.1rem;cursor:pointer;font-weight:700;color:var(--brand-d);list-style:none">＋ Yeni slayt ekle</summary>
     <form method="POST" action="{{ route('slides.store', $course) }}" style="padding:1rem 1.1rem 1.1rem">@csrf
       @include('courses.slide-fields', ['slide' => null])
       <div class="form-actions"><button class="btn btn-primary btn-sm">Slaytı ekle</button></div></form></details>

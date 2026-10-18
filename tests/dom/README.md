@@ -52,3 +52,12 @@ CSS/Tailwind yerleşimi ve görünüm, tuvalin gerçek piksel çıktısı (yaln�
 | `fuzz.mjs` | Lightbot: rastgele + çözüm mutasyonları, istemci ↔ sunucu uyumu |
 
 Yeni oyun testi eklerken `games.mjs`'teki bloklardan birini kopyalayın; yardımcılar `dom.mjs`'tedir.
+
+## Gece modu / kontrast denetimi (tarayıcı gerekmez)
+
+```
+node tests/dom/darkaudit.mjs --theme=dark                       # personel paneli, gece
+node tests/dom/darkaudit.mjs --student --band=teen --theme=dark # öğrenci (kid|mid|teen), gece/gündüz
+```
+`public/css/app.css` dosyasını kendi kaskad motoruyla (katman, özgüllük, !important, var(), oklch) DOM'a uygular;
+kontrastı 3:1'in altındaki metinleri ve gece modunda açık kalan yüzeyleri listeler. CSS'i değiştirince çalıştırın.

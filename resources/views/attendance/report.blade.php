@@ -11,7 +11,7 @@
 <div class="card tbl-wrap" style="max-width:860px"><table class="tbl">
 <thead><tr><th>Öğrenci</th><th>Geldi</th><th>Geç</th><th>İzinli</th><th>Gelmedi</th><th>Devam</th></tr></thead><tbody>
 @foreach($students as $s)@php($a = $sum[$s->id])@php($low = ($a['rate'] ?? 100) < 85)
-<tr style="{{ $low ? 'background:#fef2f2' : '' }}"><td><div class="who"><x-initials :name="$s->user->name" :size="30" /><b>{{ $s->user->name }}</b></div></td><td>{{ $a['present'] }}</td><td>{{ $a['late'] }}</td><td>{{ $a['excused'] }}</td><td>{{ $a['absent'] }}</td><td><span class="badge {{ $low ? 'badge-bad' : 'badge-ok' }}">{{ $a['rate'] !== null ? '%'.$a['rate'] : '—' }}</span></td></tr>
+<tr style="{{ $low ? 'background:var(--tint-bad)' : '' }}"><td><div class="who"><x-initials :name="$s->user->name" :size="30" /><b>{{ $s->user->name }}</b></div></td><td>{{ $a['present'] }}</td><td>{{ $a['late'] }}</td><td>{{ $a['excused'] }}</td><td>{{ $a['absent'] }}</td><td><span class="badge {{ $low ? 'badge-bad' : 'badge-ok' }}">{{ $a['rate'] !== null ? '%'.$a['rate'] : '—' }}</span></td></tr>
 @endforeach</tbody></table></div>
 <p class="help" style="margin-top:.6rem">Devam oranı: (geldi + geç) / (kayıtlar − izinli). %85 altı kırmızı.</p>
 @endif

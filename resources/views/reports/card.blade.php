@@ -3,14 +3,14 @@
 @section('content')
 <div class="card" id="card" style="max-width:820px;margin:0 auto;overflow:hidden">
   <div style="background:var(--brand);color:#fff;padding:1.6rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem">
-    <div><h1 style="margin:0;font-size:1.6rem;font-weight:800">Gelişim Karnesi</h1><p style="margin:.2rem 0 0;opacity:.8">{{ now()->format('d.m.Y') }}</p></div>
+    <div><h1 style="margin:0;font-size:1.6rem;font-weight:800;color:#fff">Gelişim Karnesi</h1><p style="margin:.2rem 0 0;opacity:.8">{{ now()->format('d.m.Y') }}</p></div>
     <div style="font-size:3.4rem;line-height:1">{{ $student->avatar?->emoji ?? '🎓' }}</div>
   </div>
   <div style="padding:1.6rem 2rem">
   <div style="font-size:1.1rem"><b>{{ $student->user->name }}</b> · {{ $student->schoolClass?->label ?? 'Sınıf yok' }} · No {{ $student->student_no }}</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin:1.3rem 0">
     @foreach([['Başarı', $stats['score'] !== null ? '%'.$stats['score'] : '—'], ['Toplam XP', $stats['xp_total']], ['Ödev', $stats['assignments_done'].'/'.$stats['assignments_total']], ['Ders', $stats['courses_done'].'/'.$stats['courses_total']], ['Oyun seviyesi', $stats['game_levels']], ['En iyi KDK', $stats['best_wpm'] ?: '—'], ['Etkin süre', $stats['minutes'].' dk'], ['Rozet', $student->badges->count()], ['Devam', $stats['attendance_rate'] !== null ? '%'.$stats['attendance_rate'] : '—'], ['Devamsız gün', $stats['absent_days']], ['Not ortalaması', $stats['grade_avg'] ?? '—']] as [$k, $v])
-      <div style="border:1px solid var(--line);border-radius:12px;padding:.7rem;text-align:center;background:#fafbff"><div style="font-size:.72rem;color:var(--muted);font-weight:600">{{ $k }}</div><div style="font-size:1.35rem;font-weight:800">{{ $v }}</div></div>@endforeach
+      <div style="border:1px solid var(--line);border-radius:12px;padding:.7rem;text-align:center;background:var(--tint-soft)"><div style="font-size:.72rem;color:var(--muted);font-weight:600">{{ $k }}</div><div style="font-size:1.35rem;font-weight:800">{{ $v }}</div></div>@endforeach
   </div>
   <div style="font-size:1.6rem;margin-bottom:1rem">@foreach($student->badges as $b)<span title="{{ $b->name }}">{{ $b->emoji }}</span> @endforeach</div>
   <h2 style="font-size:1rem;font-weight:800;margin:0 0 .5rem">Son ödevler</h2>

@@ -6,7 +6,7 @@
 </head>
 <body class="shell guest-wrap">
     <div class="guest-top"><a href="{{ auth()->check() ? route('dashboard') : route('login') }}" style="display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit">
-        <span class="sb-logo" style="color:#fff;width:34px;height:34px">&lt;/&gt;</span><b style="font-weight:800;letter-spacing:-.02em">Bilişim Kod</b></a></div>
+        <span class="sb-logo" style="width:34px;height:34px">&lt;/&gt;</span><b style="font-weight:800;letter-spacing:-.02em">Bilişim Kod</b></a></div>
     <main class="guest-main">@yield('content')</main>
     @include('layouts.partials.flash')
     <script src="{{ asset('js/ui.js') }}?v={{ $cssV }}" defer></script>

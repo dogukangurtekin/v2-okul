@@ -5,7 +5,7 @@
 <div style="max-width:760px">
 <div class="card card-pad" style="white-space:pre-line;margin-bottom:1rem;line-height:1.6">{{ $r->message }}</div>
 @foreach($replies as $p)
-<div class="card card-pad" style="white-space:pre-line;margin-bottom:.6rem;line-height:1.6;{{ $p->internal_note ? 'background:#fffbeb;border-color:#fde68a' : ($p->sender_user_id === $r->sender_user_id ? '' : 'background:#e4eaff;border-color:#c7d2fe') }}">
+<div class="card card-pad" style="white-space:pre-line;margin-bottom:.6rem;line-height:1.6;{{ $p->internal_note ? 'background:var(--tint-warn);border-color:var(--tint-warn-bd)' : ($p->sender_user_id === $r->sender_user_id ? '' : 'background:var(--tint-brand);border-color:var(--tint-brand-bd)') }}">
 <div class="help" style="margin-bottom:.3rem">{{ $p->sender->name }} · {{ $p->created_at->format('d.m H:i') }}@if($p->internal_note) · <b>dahili not</b>@endif</div>{{ $p->message }}</div>
 @endforeach
 @if($r->status !== 'closed' && $r->sender_user_id)

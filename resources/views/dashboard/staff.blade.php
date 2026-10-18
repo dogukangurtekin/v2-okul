@@ -12,8 +12,8 @@
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem" class="rise">
   @foreach([
-    ['Öğrenci', $stats['students'], 'cap', '#e4eaff', '#2447f5', route('students.index')],
-    ['Sınıf', $stats['classes'], 'building', '#ecfeff', '#0891b2', route('classes.index')],
+    ['Öğrenci', $stats['students'], 'cap', 'var(--tint-brand)', '#2447f5', route('students.index')],
+    ['Sınıf', $stats['classes'], 'building', 'var(--tint-info)', '#0891b2', route('classes.index')],
     ['Ders', $stats['courses'], 'book', '#fef3c7', '#d97706', route('courses.index')],
     ['Şu an çevrimiçi', $stats['active'], 'monitor', '#dcfce7', '#16a34a', route('tracking.index')],
   ] as [$l, $n, $ic, $bg, $fg, $href])
@@ -31,7 +31,7 @@
       @foreach($chart as $b)
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;height:100%;justify-content:flex-end">
           <small style="color:var(--muted);font-weight:600">{{ $b['n'] ?: '' }}</small>
-          <div style="width:100%;max-width:46px;border-radius:10px 10px 4px 4px;height:{{ max(6, round($b['n'] / $chartMax * 100)) }}%;background:{{ $b['today'] ? 'linear-gradient(180deg,#2447f5,var(--brand))' : '#e0e7ff' }};transition:height .8s var(--ease)"></div>
+          <div style="width:100%;max-width:46px;border-radius:10px 10px 4px 4px;height:{{ max(6, round($b['n'] / $chartMax * 100)) }}%;background:{{ $b['today'] ? 'linear-gradient(180deg,#2447f5,var(--brand))' : 'var(--tint-brand-bd)' }};transition:height .8s var(--ease)"></div>
           <small style="font-weight:{{ $b['today'] ? 800 : 600 }};color:{{ $b['today'] ? 'var(--brand)' : 'var(--muted)' }}">{{ $b['label'] }}</small>
         </div>
       @endforeach
@@ -44,7 +44,7 @@
     @php($att = $attendance)
     <a href="{{ route('attendance.sheet') }}" style="display:block;text-decoration:none;color:inherit;margin-bottom:1rem">
       <div style="display:flex;justify-content:space-between;font-size:.88rem;font-weight:600"><span>📅 Yoklama</span><span>{{ $att['taken'] }} / {{ $att['total'] }} sınıf</span></div>
-      <div style="height:8px;border-radius:99px;background:#e4eaff;margin-top:.4rem;overflow:hidden"><div data-pct="{{ $att['total'] ? round($att['taken'] / $att['total'] * 100) : 0 }}" style="height:100%;background:linear-gradient(90deg,#2447f5,#22c55e);border-radius:inherit;transition:width 1s var(--ease)"></div></div>
+      <div style="height:8px;border-radius:99px;background:var(--tint-brand);margin-top:.4rem;overflow:hidden"><div data-pct="{{ $att['total'] ? round($att['taken'] / $att['total'] * 100) : 0 }}" style="height:100%;background:linear-gradient(90deg,#2447f5,#22c55e);border-radius:inherit;transition:width 1s var(--ease)"></div></div>
     </a>
     <div style="display:grid;gap:.5rem;font-size:.9rem">
       @if($support)<a href="{{ route('support.index') }}" class="btn btn-soft" style="justify-content:flex-start">🛟 {{ $support }} okunmamış destek talebi</a>@endif
@@ -60,7 +60,7 @@
     <h2 style="font-weight:700;margin:0 0 .8rem">🏆 En çok XP kazananlar</h2>
     @forelse($top as $i => $s)
       <div style="display:flex;align-items:center;gap:.8rem;padding:.55rem 0;{{ $loop->last ? '' : 'border-bottom:1px solid var(--line)' }}">
-        <span style="width:26px;text-align:center;font-weight:800;color:{{ ['#f59e0b','#94a3b8','#b45309'][$i] ?? '#cbd5e1' }}">{{ $i + 1 }}</span>
+        <span style="width:26px;text-align:center;font-weight:800;color:{{ ['#f59e0b','#94a3b8','#b45309'][$i] ?? 'var(--line)' }}">{{ $i + 1 }}</span>
         <span style="font-size:1.5rem">{{ $s->avatar?->emoji ?? '🙂' }}</span>
         <div style="flex:1;min-width:0"><b style="font-size:.9rem">{{ $s->user->name }}</b><div style="font-size:.75rem;color:var(--muted)">{{ $s->schoolClass?->label ?? '—' }}</div></div>
         <span class="badge badge-brand">{{ $s->xp_total }} XP</span>
